@@ -1,0 +1,1 @@
+export const OUTPUT_HOURS = 'OUTPUT_HOURS'

@@ -1,0 +1,89 @@
+.DatePickerContainer {
+    max-width: 300px;
+    background-color: #121212;
+    padding: 10px;
+    box-shadow: 0 0 0 1px rgba(63, 63, 68, 0.05), 0 1px 3px rgba(63, 63, 68, 0.15);
+}
+
+.DatePickerContainer_Title{
+    font-size: 1.2rem;
+    color: whitesmoke;
+}
+
+.WeekdayContainer {
+    display: flex;
+}
+
+.Weekday {
+    display: block;
+    flex: 1 0 0%;
+    padding: 0.8rem;
+    background: transparent;
+    font-size: .6rem;
+    color: whitesmoke;
+    text-align: center;
+}
+
+.Week {
+    display: flex;
+}
+
+.EmptyStateDay {
+    display: block;
+    flex: 1 0 0%;
+    width: calc(100% /7);
+    margin: 0;
+    padding: 0.8rem;
+    border: 1px solid  #dfe3e8;
+}
+
+.Day {
+    display: block;
+    flex: 1 0 0%;
+    width: 14.28571%;
+    margin: 0;
+    padding: 0.8rem;
+    background: transparent;
+    border: 1px solid #dfe3e8;
+    border-radius: 0;
+    outline: none;
+    font-size: .8rem;
+    color:whitesmoke;
+    text-align: center;
+    cursor: pointer;
+}
+
+.Day-selected {
+    display: block;
+    flex: 1 0 0%;
+    width: 14.28571%;
+    margin: 0;
+    padding: 0.8rem;
+    background: gray;
+    border: 1px solid #dfe3e8;
+    border-radius: 0;
+    outline: none;
+    font-size: .8rem;
+    color:whitesmoke;
+    text-align: center;
+    cursor: pointer;
+}
+
+.Day + .Day,
+.Dat + .EmptyStateDay {
+    margin-left: -1px;
+}
+
+.EmptyStateDay + .EmptyStateDay,
+.EmptyStateDay + .Day{
+    margin-left: -1px;
+}
+
+.months-picker, .year-picker{
+    background: transparent;
+    color: whitesmoke;
+    font-size: 1.2rem;
+}
+.select-option{
+    color: black;
+}

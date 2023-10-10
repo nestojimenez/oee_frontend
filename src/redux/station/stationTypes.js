@@ -1,0 +1,1 @@
+export const LOAD_STATION = 'LOAD_STATION'

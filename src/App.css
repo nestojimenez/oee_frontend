@@ -1,0 +1,263 @@
+.App {
+  background-color: #121212;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  z-index: 1;
+}
+
+.container {
+  display: grid;
+  place-items: center;
+  margin-top: 5px;
+}
+
+.rectangle {
+  display: inline-block;
+  width: 80vw;
+  height: 2vw;
+  border: 2px #282c34 solid;
+  font-size: 1vw;
+  background-color: #282c34;
+  margin: 0;
+  padding: 0;
+}
+
+.parts-rectangle {
+  position: relative;
+  bottom: 0.5vw;
+  display: inline-block;
+  width: 80vw;
+  height: 0.2vw;
+  font-size: 1vw;
+  margin: 0;
+  padding: 0;
+}
+
+.time-frame {
+  position: relative;
+  display: inline-block;
+  /*width: 60vw;*/
+  height: 2vw;
+  /*border: #282c34 solid 1px;*/
+  font-size: 1vw;
+  background-color: blue;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: clip;
+}
+
+.down-time-reason {
+  vertical-align:top;
+  position: relative;
+  display: inline-block;
+  margin-left: 5px;
+  margin-top: 2px;
+  
+}
+
+.down-time-reason  .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+ 
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  margin-top: -20x;
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.down-time-reason:hover .tooltiptext {
+  visibility: visible;
+}
+
+.circle {
+  position: absolute;
+  display: inline-block;
+  /*left: 5%;*/
+  border: 1px solid #282c34;
+  width: 0.5vw;
+  height: 0.5vw;
+  /*-webkit-border-radius: 25px;
+  -moz-border-radius: 25px;*/
+  border-radius: 10px;
+  background: rgb(0, 255, 64);
+  margin: 0;
+  padding: 0;
+}
+
+.shift-frame {
+  display: grid;
+  grid-template-columns: auto;
+  height: 60hw;
+  width: auto;
+  margin: 0 auto;
+  background-color: transparent;
+  border: #121212 5px solid;
+}
+
+.shift-hours-frame {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  position: absolute;
+  bottom: 0px;
+  z-index: 2;
+  background-color: transparent;
+}
+
+.shift-hours {
+  width: 2.5vw;
+  height: auto;
+  border: 2px #282c34 solid;
+  background-color: #121212;
+}
+
+.hours {
+  width: 2.5vw;
+  height: 5.7%;
+  font-size: 50%;
+  text-align: center;
+  background-color: #121212;
+}
+
+.output-target {
+  width: 2.5vw;
+  height: 5.7%;
+  font-size: 50%;
+  text-align: center;
+  background-color: #121212;
+}
+
+.output-hours-frame {
+  width: 4vw;
+  height: auto;
+  border: 2px #282c34 solid;
+  background-color: #121212;
+  margin-left: 5px;
+}
+
+.quarter-hour-line {
+  position: absolute;
+
+  margin-top: -2%;
+  border-left: 1px solid whitesmoke;
+  height: 110%;
+  z-index: 2;
+  font-size: 50%;
+  text-indent: 5px;
+}
+
+.station-frame {
+  display: grid;
+  grid-template-columns: 25% 40% 35%;
+  top: 3vw;
+  position: absolute;
+  width: 90vw;
+  height: 30%;
+  border: 2px #282c34 solid;
+  background-color: #121212;
+  margin-left: 5px;
+}
+
+.testing-frame {
+  width: 25%;
+  height: 30%;
+  border: 10px #547d2b solid;
+  background-color: #2a7144;
+  margin-left: 5px;
+  position: absolute;
+  z-index: 1000;
+}
+
+.station-info {
+  width: auto;
+  height: auto;
+  z-index: 1000;
+  /*border: 2px #547d2b solid;
+  background-color: #282865;
+  margin: 0px;*/
+}
+
+.station-info .station {
+  font-size: 50%;
+  margin: 5px;
+}
+
+.station-info .station-name {
+  font-size: 100%;
+  margin-top: 5px;
+  background-color: #121212;
+  color: whitesmoke;
+}
+
+.station-name {
+  cursor: pointer;
+}
+
+.downtime-frame{
+  width: 25%;
+  height: 30%;
+  border: 10px #242424 solid;
+  background-color: #121212;
+  margin-left: 5px;
+  position: absolute;
+  z-index: 1000;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 30% 30% 30%;
+  text-align: center;
+
+  
+}
+
+.button-24 {
+  background: #FF4742;
+  border: 1px solid #FF4742;
+  border-radius: 6px;
+  box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  display: inline-block;
+  font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 16px;
+  min-height: 40px;
+  outline: 0;
+  padding: 12px 14px;
+  text-align: justify;
+  text-rendering: geometricprecision;
+  text-transform: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+  width: 80%;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  
+}
+
+.button-24:hover,
+.button-24:active {
+  background-color: initial;
+  background-position: 0 0;
+  color: #FF4742;
+}
+
+.button-24:active {
+  opacity: .5;
+}

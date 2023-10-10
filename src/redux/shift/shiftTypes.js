@@ -1,0 +1,1 @@
+export const LOAD_SHIFT = 'LOAD_SHIFT'

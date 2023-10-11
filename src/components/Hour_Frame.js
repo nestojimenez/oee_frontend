@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState, useRef } from "react";
 import TimeFrame from "./TimeFrame";
 import ProducePart from "./ProducePart";
 
@@ -23,14 +23,21 @@ const months = [
   "December",
 ];
 
-const Hour_Frame = ({ hour, update, index }) => {
+const Hour_Frame = ({ hour, update }) => {
   const cycleTime = 11.0;
-  const [hourData, setHourData] = useState([]);
+  const [render, setReder] = useState(true);
+  
+  //const [hourData, setHourData] = useState([]);
   const [colorData, setColorData] = useState([]);
-  const [secondsProduce, setSecondsProduce] = useState([]);
+  //const [secondsProduce, setSecondsProduce] = useState([]);
+
+  const useRefHourData = useRef([]);
+  const useRefColorData = useRef([]);
+  const useRefSecondProduce = useRef([]);
+  const useRefTimeFrameId = useRef([]);
 
   //Variable to store IDs of all TimeFrames
-  const [timeFrameId, setTimeFrameId] = useState([]);
+  //const [timeFrameId, setTimeFrameId] = useState([]);
   //Variable to store all dt reasons
   const [dtReason, setDtReason] = useState([]);
 
@@ -38,8 +45,7 @@ const Hour_Frame = ({ hour, update, index }) => {
 
   //Load from redux state dateSelected
   const dateSelected = useSelector((state) => state.date);
-  //console.log(dateSelected);
-  //console.log(dateSelected);
+  
 
   /////Load from redux state output_hour
   const output_hour = useSelector((state) => state.output_hour);
@@ -56,7 +62,7 @@ const Hour_Frame = ({ hour, update, index }) => {
     months.indexOf(dateSelected.month) < 10
       ? `0${months.indexOf(dateSelected.month)}`
       : `${months.indexOf(dateSelected.month)}`;
-  //console.log(`${dateSelected.year}${month}${day}`)
+  
 
   //Set options fot API
   const options = {
@@ -69,15 +75,13 @@ const Hour_Frame = ({ hour, update, index }) => {
   let startHour, endHour;
 
   useEffect(() => {
-    setColorData([]);
-    setHourData('');
-    setTimeFrameId([]);
-    setSecondsProduce([]);
-    setColorData([]);
+    useRefHourData.current = [];
+    useRefColorData.current = [];
+    useRefSecondProduce.current = [];
+    useRefTimeFrameId.current = [];
     setDtReason([]);
 
     (async () => {
-
       if (hour < 10) {
         startHour = `0${hour}`;
         endHour = `0${hour + 1}`.slice(-2, 3);
@@ -90,20 +94,18 @@ const Hour_Frame = ({ hour, update, index }) => {
         `/machine_performance/date_range/${startHour}/${endHour}/${dateSelected.year}${month}${day}/${stationId}`,
         options
       );
-      //console.log(`/machine_performance/date_range/${startHour}/${endHour}/${dateSelected.year}${month}${day}/${stationId}`);
+
       let data = await res.json();
 
+      //console.log(data.length);
       if (data.length !== 0) {
         let sumSeconds = 0;
         let arraySum = [];
         //Define shift series start time
-        //console.log(new Date(data[0].created_at).getMinutes());
-        //console.log(new Date(data[0].created_at).getSeconds());
-        //console.log(data[0].created_at);
+
         const start =
           new Date(data[0].created_at).getMinutes() * 60 +
           new Date(data[0].created_at).getSeconds();
-        //console.log("Shift start Time", start);
 
         //Update qty per hour (output_hour)////////////////////////////////////////
         //console.log(output_hour);
@@ -123,20 +125,22 @@ const Hour_Frame = ({ hour, update, index }) => {
 
         data.map((dat, index) => {
           let timeSeconds = 0;
-          
+
           timeSeconds =
             (new Date(dat.LEAD_created_at) - new Date(dat.created_at)) / 1000;
           //Add start time to first part made, this part need to be revie
           if (index === 0 && start > cycleTime) {
-            //console.log(start);
             timeSeconds = timeSeconds + start;
           }
           //Sumatoria de los segundos transcurridos para posicionar las partes producidas
           sumSeconds = sumSeconds + timeSeconds; //- 0.06; //Invstigar si este factor de resta funciona para alineas las partes producidas con el tiempo entre piezas
           arraySum.push(Math.trunc(sumSeconds).toString());
 
-          setHourData((arr) => [...arr, timeSeconds]); //Push into hourData the time eleapsed for each part
-          setTimeFrameId((arr) => [...arr, dat.id]); //Push frameId into usestate variable
+          //Push into hourData the time eleapsed for each part
+          useRefHourData.current = [...useRefHourData.current, timeSeconds];
+
+          //Push frameId into useref variable
+          useRefTimeFrameId.current = [...useRefTimeFrameId.current, dat.id];
 
           if (dat.dt_reason) {
             setDtReason((arr) => [...arr, dat.dt_reason]);
@@ -146,42 +150,31 @@ const Hour_Frame = ({ hour, update, index }) => {
 
           //Push color for each time elapsed
           if (Number(timeSeconds) < Number(cycleTime)) {
-            setColorData((arr) => [...arr, "green"]);
+            useRefColorData.current = [...useRefColorData.current, "green"];
           } else if (
             Number(cycleTime) < Number(timeSeconds) &&
             Number(timeSeconds) < 50
           ) {
-            setColorData((arr) => [...arr, "yellow"]);
+            useRefColorData.current = [...useRefColorData.current, "yellow"];
           } else {
             //Review if tiem frame has a DT reason loaded
             if (dat.dt_reason) {
-              setColorData((arr) => [...arr, "#A52A2A"]);
+              useRefColorData.current = [...useRefColorData.current, "#A52A2A"];
             } else {
-              setColorData((arr) => [...arr, "red"]);
+              useRefColorData.current = [...useRefColorData.current, "red"];
             }
           }
         });
         //Update state variable to render part produce
-        setSecondsProduce(arraySum);
 
-        //console.log("Array with secondproduce", hourData.length);
+        useRefSecondProduce.current = arraySum;
+
         //Calculate the total amount of time where product input have been made and calculate vs current time in order to apply red waiting for the new product enter
         //The idea here is to fill with red the fields that has no data
         let sum = 0;
-        let suma = [];
-        hourData.forEach((num) => {
+        useRefHourData.current.map((num) => {
           sum += num;
-          suma.push(sum);
         });
-        if (hour === 11) {
-          console.log(suma);
-          console.log("My hour data", hourData, sum);
-          hourData.forEach((dat, index) => {
-            if (dat > 5) {
-              console.log(dat, index);
-            }
-          });
-        }
 
         const today = new Date();
         const currentHour = today.getHours();
@@ -189,20 +182,20 @@ const Hour_Frame = ({ hour, update, index }) => {
         const seconds = today.getSeconds();
         const totalSeconds = minutes * 60 + seconds;
 
-        //console.log(sum);
-        //console.log(totalSeconds);
-
         //Add red to incomplete hour that already pass/////
         if (sum < 3550 && hour !== currentHour) {
-          setHourData((arr) => [...arr, 3600 - sum]);
-          setColorData((arr) => [...arr, "red"]);
+          useRefHourData.current = [...useRefHourData.current, 3600 - sum - 5];
+          useRefColorData.current = [...useRefColorData.current, "red"];
         }
         ///////////////////////////////////////////////////////////////
         //Add red to a current hour where no product has been enter
         if (sum < 3550 && sum < totalSeconds - 50 && hour === currentHour) {
-          //console.log(totalSeconds - sum);
-          setHourData((arr) => [...arr, totalSeconds - sum]);
-          setColorData((arr) => [...arr, "red"]);
+          useRefHourData.current = [
+            ...useRefHourData.current,
+            totalSeconds - sum,
+          ];
+
+          useRefColorData.current = [...useRefColorData.current, "red"];
         }
       } else {
         const today = new Date();
@@ -210,14 +203,22 @@ const Hour_Frame = ({ hour, update, index }) => {
         const currentMinutes = today.getMinutes();
         const currentSeconds = today.getSeconds();
         const totalSeconds = currentMinutes * 60 + currentSeconds;
+
         if (hour < currentHour) {
-          setHourData((arr) => [...arr, 3600]);
-          setColorData((arr) => [...arr, "red"]);
+          //setHourData((arr) => [...arr, 3600]);
+          useRefHourData.current = [...useRefHourData.current, 3600];
+          useRefColorData.current = [...useRefColorData.current, "red"];
         } else if (hour === currentHour) {
-          setHourData((arr) => [...arr, totalSeconds]);
-          setColorData((arr) => [...arr, "red"]);
+          useRefHourData.current = [...useRefHourData.current, totalSeconds];
+          useRefColorData.current = [...useRefColorData.current, "red"];
         }
       }
+
+      if (hour === 7) {
+        console.log("Data from seven", data);
+      }
+
+      setReder(!render);
 
       /////////////////////////////////////////////////////////
     })();
@@ -225,30 +226,33 @@ const Hour_Frame = ({ hour, update, index }) => {
 
   return (
     <div className="container">
+      {/*useRefHourData.current.length*/}
       <div className="rectangle">
-        {hourData.length !== 0 ? (
-          hourData.map((hour, index) => {
+        {useRefHourData.current.length !== 0 ? (
+          useRefHourData.current.map((hour, index) => {
             return (
               <TimeFrame
                 key={index}
                 durationSecs={hour}
-                bgColor={colorData[index]}
-                timeFrameId={timeFrameId[index]}
+                bgColor={useRefColorData.current[index]}
+                timeFrameId={useRefTimeFrameId.current[index]}
                 dtReason={dtReason[index]}
               />
             );
           })
         ) : (
-          <></>
+          <>No Entro al if, se fue al else directo</>
         )}
       </div>
+
       <div className="parts-rectangle">
-        {hourData.length !== 0 && timeFrameId.length !== 0 ? ( //Review if time frame id exist, if not this red bar is part of another red bar with id
-          hourData.map((time, index) => {
+        {useRefHourData.current.length !== 0 &&
+        useRefTimeFrameId.current.length !== 0 ? ( //Review if time frame id exist, if not this red bar is part of another red bar with id
+          useRefHourData.current.map((time, index) => {
             return (
               <ProducePart
                 key={index}
-                producePartTime={secondsProduce[index]}
+                producePartTime={useRefSecondProduce.current[index]}
               />
             );
           })

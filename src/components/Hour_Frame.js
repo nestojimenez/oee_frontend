@@ -23,13 +23,9 @@ const months = [
   "December",
 ];
 
-const Hour_Frame = ({ hour, update }) => {
+const Hour_Frame = ({ hour, update, firstProductByHour }) => {
   const cycleTime = 11.0;
   const [render, setReder] = useState(true);
-  
-  //const [hourData, setHourData] = useState([]);
-  const [colorData, setColorData] = useState([]);
-  //const [secondsProduce, setSecondsProduce] = useState([]);
 
   const useRefHourData = useRef([]);
   const useRefColorData = useRef([]);
@@ -39,13 +35,12 @@ const Hour_Frame = ({ hour, update }) => {
   //Variable to store IDs of all TimeFrames
   //const [timeFrameId, setTimeFrameId] = useState([]);
   //Variable to store all dt reasons
-  const [dtReason, setDtReason] = useState([]);
+  const useRefDtReason = useRef([]);
 
   const dispatch = useDispatch();
 
   //Load from redux state dateSelected
   const dateSelected = useSelector((state) => state.date);
-  
 
   /////Load from redux state output_hour
   const output_hour = useSelector((state) => state.output_hour);
@@ -62,7 +57,6 @@ const Hour_Frame = ({ hour, update }) => {
     months.indexOf(dateSelected.month) < 10
       ? `0${months.indexOf(dateSelected.month)}`
       : `${months.indexOf(dateSelected.month)}`;
-  
 
   //Set options fot API
   const options = {
@@ -72,6 +66,20 @@ const Hour_Frame = ({ hour, update }) => {
     },
   };
 
+  for (let i in firstProductByHour) {
+    if (firstProductByHour[i][0] === undefined) {
+      firstProductByHour[i][0] = "";
+    }
+  }
+  //Sort array by hour
+  firstProductByHour.sort((a, b) => {
+    if (a[1] === b[1]) {
+      return 0;
+    } else {
+      return a[1] < b[1] ? -1 : 1;
+    }
+  });
+  console.log("FirstProductByHour", firstProductByHour);
   let startHour, endHour;
 
   useEffect(() => {
@@ -79,7 +87,7 @@ const Hour_Frame = ({ hour, update }) => {
     useRefColorData.current = [];
     useRefSecondProduce.current = [];
     useRefTimeFrameId.current = [];
-    setDtReason([]);
+    useRefDtReason.current = [];
 
     (async () => {
       if (hour < 10) {
@@ -143,9 +151,9 @@ const Hour_Frame = ({ hour, update }) => {
           useRefTimeFrameId.current = [...useRefTimeFrameId.current, dat.id];
 
           if (dat.dt_reason) {
-            setDtReason((arr) => [...arr, dat.dt_reason]);
+            useRefDtReason.current = [...useRefDtReason.current, dat.dt_reason];
           } else {
-            setDtReason((arr) => [...arr, ""]);
+            useRefDtReason.current = [...useRefDtReason.current, ""];
           }
 
           //Push color for each time elapsed
@@ -183,10 +191,37 @@ const Hour_Frame = ({ hour, update }) => {
         const totalSeconds = minutes * 60 + seconds;
 
         //Add red to incomplete hour that already pass/////
-        if (sum < 3550 && hour !== currentHour) {
+        if (sum < 3550 && hour !== currentHour && useRefHourData.current) {
+          console.log(hour);
           useRefHourData.current = [...useRefHourData.current, 3600 - sum - 5];
-          useRefColorData.current = [...useRefColorData.current, "red"];
+
+          ///Look for the next available part, to se if it has DT reason loaded and asing it to this red bar that already pass
+          const foundDtReason = firstProductByHour.filter(
+            //Look for items that are not empty
+            (element) => element[0] !== ""
+          );
+
+          const dt_reason = foundDtReason.find((element, index) => {
+            return element[1] > hour;
+          });
+
+          if (dt_reason !== undefined) {
+            console.log(dt_reason);
+            useRefDtReason.current = [
+              ...useRefDtReason.current,
+              dt_reason[0].dt_reason,
+            ];
+
+            if (dt_reason[0].dt_reason !== null) {
+              useRefColorData.current = [...useRefColorData.current, "#A52A2A"];
+            } else {
+              useRefColorData.current = [...useRefColorData.current, "red"];
+            }
+          } else {
+            useRefColorData.current = [...useRefColorData.current, "red"];
+          }
         }
+
         ///////////////////////////////////////////////////////////////
         //Add red to a current hour where no product has been enter
         if (sum < 3550 && sum < totalSeconds - 50 && hour === currentHour) {
@@ -207,18 +242,51 @@ const Hour_Frame = ({ hour, update }) => {
         if (hour < currentHour) {
           //setHourData((arr) => [...arr, 3600]);
           useRefHourData.current = [...useRefHourData.current, 3600];
-          useRefColorData.current = [...useRefColorData.current, "red"];
+
+          ///Look for the next available part, to se if it has DT reason loaded and asing it to this red bar that already pass
+          const foundDtReason = firstProductByHour.filter(
+            //Look for items that are not empty
+            (element) => element[0] !== ""
+          );
+
+          console.log(foundDtReason);
+
+          const dt_reason = foundDtReason.find((element, index) => {
+            return element[1] > hour;
+          });
+
+          if (dt_reason !== undefined) {
+            console.log(dt_reason);
+            useRefDtReason.current = [
+              ...useRefDtReason.current,
+              dt_reason[0].dt_reason,
+            ];
+            if (dt_reason[0].dt_reason === null) {
+              useRefColorData.current = [...useRefColorData.current, "red"];
+            } else {
+              useRefColorData.current = ["#A52A2A"];
+            }
+          } else {
+            useRefColorData.current = [...useRefColorData.current, "red"];
+          }
+
+          //console.log("next hour product", nextHourFirstProduct);
         } else if (hour === currentHour) {
           useRefHourData.current = [...useRefHourData.current, totalSeconds];
           useRefColorData.current = [...useRefColorData.current, "red"];
+          useRefDtReason.current = [
+            ...useRefDtReason.current,
+            'TODO DT for last red'
+          ];
+
+          ///Look for the next available part, to se if it has DT reason loaded and asing it to this red bar that already pass
+          //const nextHourFirstProduct = firstProductByHour.find((element)=> Number(hour) === Number(element[1]));
+          //console.log('next hour product', nextHourFirstProduct)
         }
       }
 
-      if (hour === 7) {
-        console.log("Data from seven", data);
-      }
-
       setReder(!render);
+      console.log(useRefColorData);
 
       /////////////////////////////////////////////////////////
     })();
@@ -236,12 +304,12 @@ const Hour_Frame = ({ hour, update }) => {
                 durationSecs={hour}
                 bgColor={useRefColorData.current[index]}
                 timeFrameId={useRefTimeFrameId.current[index]}
-                dtReason={dtReason[index]}
+                dtReason={useRefDtReason.current[index]}
               />
             );
           })
         ) : (
-          <>No Entro al if, se fue al else directo</>
+          <></>
         )}
       </div>
 
@@ -253,11 +321,12 @@ const Hour_Frame = ({ hour, update }) => {
               <ProducePart
                 key={index}
                 producePartTime={useRefSecondProduce.current[index]}
+                currentHour={hour}
               />
             );
           })
         ) : (
-          <>No data</>
+          <></>
         )}
       </div>
     </div>

@@ -1,13 +1,15 @@
 import React from 'react'
 
-const ProducePart = ({producePartTime}) => {
-    //console.log('Produce part time: ', producePartTime)
+const ProducePart = ({producePartTime, currentHour}) => {
+    console.log('Produce part time: ', producePartTime)
     const secondHour = 3600;
     const durationPercentage = Number(producePartTime) * .0276
     //const durationPercentage = 100*(Number(producePartTime) / Number(secondHour));
-    //console.log(durationPercentage)
+    console.log(durationPercentage, currentHour)
   return (
-    <div className='circle' style={{left:`${Number(durationPercentage)}%`}}></div>
+    producePartTime ?
+    <div className='circle' style={{left:`${Number(durationPercentage)}%`}}></div> :
+    <></>
   )
 }
 

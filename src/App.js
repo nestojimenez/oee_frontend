@@ -39,12 +39,12 @@ function App() {
 
     fetch("/machine_performance", requestOptions)
       .then((response) => response.text())
-      .then((result) => console.log(result))
+      //.then((result) => console.log(result))
       .catch((error) => console.log("error", error));
   };
 
   setInterval(() => {
-    addMachinePerformance();
+    //addMachinePerformance();
   }, 10000);
 
   return (

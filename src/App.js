@@ -44,7 +44,7 @@ function App() {
   };
 
   setInterval(() => {
-    //addMachinePerformance();
+    addMachinePerformance();
   }, 10000);
 
   return (

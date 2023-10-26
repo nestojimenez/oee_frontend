@@ -37,21 +37,24 @@ const EnterDowntTime = () => {
     dispatch(load_downTime({ activate: activate, x: x, y: y }));
   };
 
-  const options = {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
+  function subtractHours(date, hours) {
+    date.setHours(date.getHours() - hours);
 
-  const updateDownTime = () => {
+    return date;
+  }
+
+  const addMachinePerformance = () => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
     var raw = JSON.stringify({
-      id: dtFrame_id,
+      id_products: "5",
+      id_stations: "2",
+      created_at: subtractHours(new Date(), 7),
+      updated_at: subtractHours(new Date(), 7),
       id_dt_reason: reasonId,
       dt_reason: reasonSelected,
+      dummy: 1,
     });
 
     //toISOString().toLocaleString("en-US", {timeZone: 'America/Tijuana', hour12:false}),
@@ -62,14 +65,59 @@ const EnterDowntTime = () => {
       redirect: "follow",
     };
 
-    fetch("/downtime_reasons/update", requestOptions)
+    fetch("/machine_performance_with_dt_reason", requestOptions)
       .then((response) => response.text())
-      .then((result) => console.log(result))
+      //.then((result) => console.log(result))
       .catch((error) => console.log("error", error));
-
-    dispatch(load_downTime({ activate: !load_donwtime, x: x, y: y }));
   };
 
+  const options = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  /////////////////////////////////////////////////////////////////
+  const updateDownTime = () => {
+    if (dtFrame_id) {
+      console.log(dtFrame_id);
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+
+      var raw = JSON.stringify({
+        id: dtFrame_id,
+        id_dt_reason: reasonId,
+        dt_reason: reasonSelected,
+      });
+
+      //toISOString().toLocaleString("en-US", {timeZone: 'America/Tijuana', hour12:false}),
+      var requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
+
+      fetch("/downtime_reasons/update", requestOptions)
+        .then((response) => response.text())
+        .then((result) => console.log(result))
+        .catch((error) => console.log("error", error));
+
+      fetch("/downtime_reasons/update", requestOptions)
+        .then((response) => response.text())
+        .then((result) => console.log(result))
+        .catch((error) => console.log("error", error));
+
+      dispatch(load_downTime({ activate: !load_donwtime, x: x, y: y }));
+    } else if (!dtFrame_id) {
+      console.log("Aqui estoy");
+      addMachinePerformance();
+
+      dispatch(load_downTime({ activate: !load_donwtime, x: x, y: y }));
+    }
+  };
+
+  ////////////////////////////////////////////////////////////////////////////////////////
   const onChange = (e) => {
     console.log(e.target.value.split(",")[1].trimStart());
     setReasonId(e.target.value.split(" ")[0]);

@@ -31,6 +31,7 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
   const useRefColorData = useRef([]);
   const useRefSecondProduce = useRef([]);
   const useRefTimeFrameId = useRef([]);
+  const useRefIsDummy = useRef([]);
 
   //Variable to store IDs of all TimeFrames
   //const [timeFrameId, setTimeFrameId] = useState([]);
@@ -81,6 +82,7 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
   });
   console.log("FirstProductByHour", firstProductByHour);
   let startHour, endHour;
+  
 
   useEffect(() => {
     useRefHourData.current = [];
@@ -88,6 +90,7 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
     useRefSecondProduce.current = [];
     useRefTimeFrameId.current = [];
     useRefDtReason.current = [];
+    useRefIsDummy.current = [];
 
     (async () => {
       if (hour < 10) {
@@ -109,6 +112,7 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
       if (data.length !== 0) {
         let sumSeconds = 0;
         let arraySum = [];
+        let isDummy = [];
         //Define shift series start time
 
         const start =
@@ -144,6 +148,14 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
           sumSeconds = sumSeconds + timeSeconds; //- 0.06; //Invstigar si este factor de resta funciona para alineas las partes producidas con el tiempo entre piezas
           arraySum.push(Math.trunc(sumSeconds).toString());
 
+          if(dat.dummy===null){
+            isDummy.push(0);
+          }else{
+            isDummy.push(dat.dummy);
+          }
+          
+          console.log(isDummy);
+
           //Push into hourData the time eleapsed for each part
           useRefHourData.current = [...useRefHourData.current, timeSeconds];
 
@@ -176,6 +188,7 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
         //Update state variable to render part produce
 
         useRefSecondProduce.current = arraySum;
+        useRefIsDummy.current = isDummy;
 
         //Calculate the total amount of time where product input have been made and calculate vs current time in order to apply red waiting for the new product enter
         //The idea here is to fill with red the fields that has no data
@@ -322,6 +335,7 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
                 key={index}
                 producePartTime={useRefSecondProduce.current[index]}
                 currentHour={hour}
+                isDummy = {useRefIsDummy.current[index]}
               />
             );
           })

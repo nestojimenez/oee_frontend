@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import { useDispatch } from "react-redux";
 import { loadStation } from "../redux";
-import factoryAtlas from '../images/Picture1.jpg'
+import factoryAtlas from '../images/factoryAtlas_1.jpg'
 
 const Station_Info = () => {
   const [stations, setStations] = useState("");

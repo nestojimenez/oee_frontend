@@ -5,7 +5,7 @@ import ProducePart from "./ProducePart";
 //Set up the use of the Reducer
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import { useDispatch } from "react-redux";
-import { outputHour } from "../redux";
+import { clearDT, loadDT, outputHour, loadPerformance, clearPerformance  } from "../redux";
 
 const months = [
   "Empty",
@@ -24,7 +24,7 @@ const months = [
 ];
 
 const Hour_Frame = ({ hour, update, firstProductByHour }) => {
-  const cycleTime = 11.0;
+  const cycleTime = 4.0;
   const [render, setReder] = useState(true);
 
   const useRefHourData = useRef([]);
@@ -42,7 +42,7 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
 
   //Load from redux state dateSelected
   const dateSelected = useSelector((state) => state.date);
-
+  console.log(dateSelected);
   /////Load from redux state output_hour
   const output_hour = useSelector((state) => state.output_hour);
   //Load stations selected
@@ -50,6 +50,12 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
 
   //useSelector of activate variable that changes everytime a DT reason is enter
   const activate = useSelector((state) => state.load_downtime.activate);
+
+  //useSelector for dt by hour
+  const dt_hour = useSelector((state) => state.dt);
+
+  //useSelector for performance by hour
+  const performance_hour = useSelector((state) => state.performance);
 
   //Date for the query of machine perfomarmace table "20230922"
   const day =
@@ -80,9 +86,8 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
       return a[1] < b[1] ? -1 : 1;
     }
   });
-  console.log("FirstProductByHour", firstProductByHour);
+  //console.log("FirstProductByHour", firstProductByHour);
   let startHour, endHour;
-  
 
   useEffect(() => {
     useRefHourData.current = [];
@@ -91,6 +96,33 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
     useRefTimeFrameId.current = [];
     useRefDtReason.current = [];
     useRefIsDummy.current = [];
+    dispatch(
+      outputHour({
+        7: 0,
+        8: 0,
+        9: 0,
+        10: 0,
+        11: 0,
+        12: 0,
+        13: 0,
+        14: 0,
+        15: 0,
+        16: 0,
+        17: 0,
+        18: 0,
+      })
+    );
+    dispatch(clearDT());
+    dispatch(clearPerformance());
+
+    const currentDate = new Date();
+    
+    const isCurrentDate =
+      dateSelected.day !== currentDate.getDate().toString() ||
+      months[currentDate.getMonth() + 1] !== dateSelected.month
+        ? false
+        : true;
+    //console.log(isCurrentDate);
 
     (async () => {
       if (hour < 10) {
@@ -123,7 +155,8 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
         //console.log(output_hour);
         let newOutputHour = output_hour;
         newOutputHour[hour] = parseInt(data.length);
-
+        //console.log(data.length);
+        //console.log(newOutputHour);
         dispatch(outputHour(newOutputHour));
         //console.log(output_hour);
 
@@ -148,13 +181,13 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
           sumSeconds = sumSeconds + timeSeconds; //- 0.06; //Invstigar si este factor de resta funciona para alineas las partes producidas con el tiempo entre piezas
           arraySum.push(Math.trunc(sumSeconds).toString());
 
-          if(dat.dummy===null){
+          if (dat.dummy === null) {
             isDummy.push(0);
-          }else{
+          } else {
             isDummy.push(dat.dummy);
           }
-          
-          console.log(isDummy);
+
+          //console.log(isDummy);
 
           //Push into hourData the time eleapsed for each part
           useRefHourData.current = [...useRefHourData.current, timeSeconds];
@@ -168,11 +201,12 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
             useRefDtReason.current = [...useRefDtReason.current, ""];
           }
 
+          //console.log("timeSeconds", timeSeconds);
           //Push color for each time elapsed
-          if (Number(timeSeconds) < Number(cycleTime)) {
+          if (Number(timeSeconds) < Number(cycleTime+1)) {
             useRefColorData.current = [...useRefColorData.current, "green"];
           } else if (
-            Number(cycleTime) < Number(timeSeconds) &&
+            Number(cycleTime +1) < Number(timeSeconds) &&
             Number(timeSeconds) < 50
           ) {
             useRefColorData.current = [...useRefColorData.current, "yellow"];
@@ -205,7 +239,7 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
 
         //Add red to incomplete hour that already pass/////
         if (sum < 3550 && hour !== currentHour && useRefHourData.current) {
-          console.log(hour);
+          //console.log(hour);
           useRefHourData.current = [...useRefHourData.current, 3600 - sum - 5];
 
           ///Look for the next available part, to se if it has DT reason loaded and asing it to this red bar that already pass
@@ -219,7 +253,7 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
           });
 
           if (dt_reason !== undefined) {
-            console.log(dt_reason);
+            //console.log(dt_reason);
             useRefDtReason.current = [
               ...useRefDtReason.current,
               dt_reason[0].dt_reason,
@@ -238,6 +272,7 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
         ///////////////////////////////////////////////////////////////
         //Add red to a current hour where no product has been enter
         if (sum < 3550 && sum < totalSeconds - 50 && hour === currentHour) {
+          //console.log(hour);
           useRefHourData.current = [
             ...useRefHourData.current,
             totalSeconds - sum,
@@ -252,7 +287,7 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
         const currentSeconds = today.getSeconds();
         const totalSeconds = currentMinutes * 60 + currentSeconds;
 
-        if (hour < currentHour) {
+        if (hour < currentHour || !isCurrentDate) {
           //setHourData((arr) => [...arr, 3600]);
           useRefHourData.current = [...useRefHourData.current, 3600];
 
@@ -262,14 +297,14 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
             (element) => element[0] !== ""
           );
 
-          console.log(foundDtReason);
+          //console.log(foundDtReason);
 
           const dt_reason = foundDtReason.find((element, index) => {
             return element[1] > hour;
           });
 
-          if (dt_reason !== undefined) {
-            console.log(dt_reason);
+          if (dt_reason !== undefined && dt_reason.length !== 0) {
+            //console.log(dt_reason);
             useRefDtReason.current = [
               ...useRefDtReason.current,
               dt_reason[0].dt_reason,
@@ -289,7 +324,7 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
           useRefColorData.current = [...useRefColorData.current, "red"];
           useRefDtReason.current = [
             ...useRefDtReason.current,
-            'TODO DT for last red'
+            "TODO DT for last red, can be to enter a last part or to enter a DT reason at the end of the shift",
           ];
 
           ///Look for the next available part, to se if it has DT reason loaded and asing it to this red bar that already pass
@@ -298,8 +333,34 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
         }
       }
 
+      //Calculate DT per hour
+      let dtHour = 0;
+      useRefHourData.current.map((num, index) => {
+        if (
+          useRefColorData.current[index] === "red" ||
+          useRefColorData.current[index] === "#A52A2A"
+        ) {
+          dtHour += num;
+        }
+      });
+      dispatch(loadDT(dtHour, hour));
+      //console.log(dt_hour);
+      /////////////////////////////////////////////////
+      //Caculate Performance by Hour
+      let performanceHour = 0;
+      if (useRefSecondProduce.current.length !== 0) {
+        //console.log(3600 - dtHour);
+        performanceHour = (cycleTime * parseInt(data.length)) / (3600 - dtHour);
+        //console.log(dtHour);
+        //console.log(performanceHour, hour);
+        dispatch(loadPerformance(performanceHour, hour));
+      }else{
+        dispatch(loadPerformance(1, hour));
+      }
+      
+      //Activate redering///////////////////////////////
       setReder(!render);
-      console.log(useRefColorData);
+      //console.log(useRefColorData);
 
       /////////////////////////////////////////////////////////
     })();
@@ -335,7 +396,7 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
                 key={index}
                 producePartTime={useRefSecondProduce.current[index]}
                 currentHour={hour}
-                isDummy = {useRefIsDummy.current[index]}
+                isDummy={useRefIsDummy.current[index]}
               />
             );
           })

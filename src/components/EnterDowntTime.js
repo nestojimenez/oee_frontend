@@ -44,12 +44,13 @@ const EnterDowntTime = () => {
   }
 
   const addMachinePerformance = () => {
+    console.log(station_id);
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
     var raw = JSON.stringify({
       id_products: "5",
-      id_stations: "2",
+      id_stations: station_id.toString(),
       created_at: subtractHours(new Date(), 7),
       updated_at: subtractHours(new Date(), 7),
       id_dt_reason: reasonId,
@@ -69,6 +70,12 @@ const EnterDowntTime = () => {
       .then((response) => response.text())
       //.then((result) => console.log(result))
       .catch((error) => console.log("error", error));
+
+      fetch("/machine_performance_with_dt_reason", requestOptions)
+      .then((response) => response.text())
+      //.then((result) => console.log(result))
+      .catch((error) => console.log("error", error));
+      
   };
 
   const options = {
@@ -103,10 +110,7 @@ const EnterDowntTime = () => {
         .then((result) => console.log(result))
         .catch((error) => console.log("error", error));
 
-      fetch("/downtime_reasons/update", requestOptions)
-        .then((response) => response.text())
-        .then((result) => console.log(result))
-        .catch((error) => console.log("error", error));
+      
 
       dispatch(load_downTime({ activate: !load_donwtime, x: x, y: y }));
     } else if (!dtFrame_id) {

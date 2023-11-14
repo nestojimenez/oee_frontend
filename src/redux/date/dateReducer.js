@@ -1,8 +1,25 @@
 import { LOAD_DATE } from "./dateTypes"
 
+
+const months = [
+    "Empty",
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
 const initialState = {
-    day: 1,
-    month: 'January',
+    day: new Date().getDate().toString(),
+    month: months[new Date().getMonth() +1].toString(),
     year: '2023',
 }
 

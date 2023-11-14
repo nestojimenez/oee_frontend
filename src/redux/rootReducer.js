@@ -4,6 +4,8 @@ import shiftReducer from "./shift/shiftReducer";
 import dateReducer from "./date/dateReducer"
 import output_hourReducer from "./output_hour/output_hourReducer";
 import load_downtimeReducer from "./load_downtime/load_downtimeReducer";
+import dtReducer from "./dt_hour/dtReducer";
+import performanceReducer from "./performance_hour/performanceReducer";
 
 //Set up combine reducers
 const rootReducer = combineReducers({
@@ -11,7 +13,9 @@ const rootReducer = combineReducers({
     shift: shiftReducer,
     date: dateReducer,
     output_hour:output_hourReducer,
-    load_downtime:load_downtimeReducer
+    load_downtime:load_downtimeReducer,
+    dt: dtReducer,
+    performance: performanceReducer,
 })
 
 export default rootReducer;

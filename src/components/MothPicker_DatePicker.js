@@ -29,7 +29,7 @@ const selectYear = (e) => {
 
   return (
     <div>
-      <select className='months-picker' name="moths" id="months" onChange={selectMonth}>
+      <select className='months-picker' name="moths" id="months" onChange={selectMonth} value={month}>
         <option className="select-option" value="January">January</option>
         <option className="select-option" value="February">February</option>
         <option className="select-option" value="March">March</option>
@@ -43,7 +43,7 @@ const selectYear = (e) => {
         <option className="select-option" value="November">November</option>
         <option className="select-option" value="December">December</option>
       </select>
-      <select className='year-picker' name="year" id="year" onChange={selectYear}>
+      <select className='year-picker' name="year" id="year" onChange={selectYear} value={year}>
         <option className="select-option" value="2022">2022</option>
         <option className="select-option" value="2023">2023</option>
         <option className="select-option" value="2024">2024</option>

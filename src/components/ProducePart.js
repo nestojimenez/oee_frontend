@@ -8,7 +8,9 @@ const ProducePart = ({producePartTime, currentHour, isDummy}) => {
     console.log(isDummy);
   return (
     producePartTime && isDummy === 0 ?
-    <div className='circle' style={{left:`${Number(durationPercentage)}%`}}></div> :
+    <div className='circle' style={{left:`${Number(durationPercentage)}%`, cursor:'pointer'}}>
+      
+    </div> :
     <></>
   )
 }

@@ -23,10 +23,10 @@ function App() {
     myHeaders.append("Content-Type", "application/json");
 
     var raw = JSON.stringify({
-      id_products: "5",
-      id_stations: "2",
-      created_at: subtractHours(new Date(), 7),
-      updated_at: subtractHours(new Date(), 7),
+      id_products: "2", //5 o 2
+      id_stations: "2", //2
+      created_at: subtractHours(new Date(), 8),
+      updated_at: subtractHours(new Date(), 8),
     });
 
     //toISOString().toLocaleString("en-US", {timeZone: 'America/Tijuana', hour12:false}),
@@ -36,6 +36,7 @@ function App() {
       body: raw,
       redirect: "follow",
     };
+    console.log(raw);
 
     fetch("/machine_performance", requestOptions)
       .then((response) => response.text())
@@ -46,7 +47,7 @@ function App() {
   setInterval(() => {
     addMachinePerformance();
   }, 10000);
-
+  //addMachinePerformance();
   return (
     <Provider store={store}>
       <div className="App">

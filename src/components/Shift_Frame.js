@@ -72,8 +72,8 @@ const Shift_Frame = () => {
           startHour = `${hour}`;
           endHour = `${hour + 1}`;
         }
-        console.log(startHour);
-        console.log(endHour);
+        //console.log(startHour);
+        //console.log(endHour);
         let res = await fetch(
           `/machine_performance/date_range/${startHour}/${endHour}/${dateSelected.year}${month}${day}/${stationId}`,
           //`/machine_performance/date_range/7/8/20231017/2`,
@@ -81,10 +81,10 @@ const Shift_Frame = () => {
         );
 
         let data = await res.json();
-        console.log(hour);
+        //console.log(hour);
         useRefFirstHourProduct.current.push([data[0], hour]);
 
-        console.log(useRefFirstHourProduct.current);
+        //console.log(useRefFirstHourProduct.current);
       })();
     });
   }, [update]);

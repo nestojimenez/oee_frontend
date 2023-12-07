@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
 import DatePicker from "./DatePicker";
+//Set up the use of the Reducer
+import { useSelector } from "react-redux/es/hooks/useSelector";
 
 const Shift_Date = () => {
   const [timestamp, setTimestamp] = useState(0);
   const [datePickerVisible, setDatePickerVisible] = useState(false);
+
+   //Load from redux state dateSelected
+   const dateSelected = useSelector((state) => state.date);
 
   const weekDays = [
     "No Day",
@@ -42,7 +47,7 @@ const Shift_Date = () => {
 
   return (
     <div className="station-info">
-      <p className="station">SHIFT</p>
+      <p className="station">Today's date</p>
       <p className="station-name" onClick={onClick}>
         <span style={{ paddingRight: "5px" }}>
           <i className="bi bi-rocket"></i>
@@ -50,6 +55,8 @@ const Shift_Date = () => {
         {timestamp}
       </p>
       {datePickerVisible && <DatePicker/>}
+      <p className="station">Date Selected</p>
+      <p className="station-name">{`${dateSelected.day}/${dateSelected.month}/${dateSelected.year}`}</p>
     </div>
   );
 };

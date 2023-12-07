@@ -42,7 +42,7 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
 
   //Load from redux state dateSelected
   const dateSelected = useSelector((state) => state.date);
-  console.log(dateSelected);
+  //console.log(dateSelected);
   /////Load from redux state output_hour
   const output_hour = useSelector((state) => state.output_hour);
   //Load stations selected
@@ -122,7 +122,7 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
       months[currentDate.getMonth() + 1] !== dateSelected.month
         ? false
         : true;
-    //console.log(isCurrentDate);
+    console.log(isCurrentDate);
 
     (async () => {
       if (hour < 10) {
@@ -203,11 +203,12 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
 
           //console.log("timeSeconds", timeSeconds);
           //Push color for each time elapsed
+         
           if (Number(timeSeconds) < Number(cycleTime+1)) {
             useRefColorData.current = [...useRefColorData.current, "green"];
           } else if (
-            Number(cycleTime +1) < Number(timeSeconds) &&
-            Number(timeSeconds) < 50
+            Number(cycleTime) < Number(timeSeconds) &&
+            Number(timeSeconds) < 60
           ) {
             useRefColorData.current = [...useRefColorData.current, "yellow"];
           } else {
@@ -237,10 +238,18 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
         const seconds = today.getSeconds();
         const totalSeconds = minutes * 60 + seconds;
 
-        //Add red to incomplete hour that already pass/////
-        if (sum < 3550 && hour !== currentHour && useRefHourData.current) {
-          //console.log(hour);
-          useRefHourData.current = [...useRefHourData.current, 3600 - sum - 5];
+        //Add red to incomplete hour that already pass or to current hour/////
+        if (sum < 3550 /*&& hour !== currentHour*/ && useRefHourData.current) {
+          if(hour === currentHour){
+            console.log(hour); //Do nothing
+            console.log(totalSeconds - sum);
+            useRefHourData.current = [...useRefHourData.current, totalSeconds - sum];
+          }else{ ///Add red to incomplete hour.
+            console.log(hour);
+            useRefHourData.current = [...useRefHourData.current, 3600 - sum - 5];
+          }
+
+          
 
           ///Look for the next available part, to se if it has DT reason loaded and asing it to this red bar that already pass
           const foundDtReason = firstProductByHour.filter(
@@ -271,8 +280,9 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
 
         ///////////////////////////////////////////////////////////////
         //Add red to a current hour where no product has been enter
-        if (sum < 3550 && sum < totalSeconds - 50 && hour === currentHour) {
-          //console.log(hour);
+        console.log(isCurrentDate)
+        if (sum < 3550 && sum < totalSeconds - 50 && hour === currentHour && !isCurrentDate) {
+          console.log(hour);
           useRefHourData.current = [
             ...useRefHourData.current,
             totalSeconds - sum,
@@ -286,8 +296,9 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
         const currentMinutes = today.getMinutes();
         const currentSeconds = today.getSeconds();
         const totalSeconds = currentMinutes * 60 + currentSeconds;
-
+        
         if (hour < currentHour || !isCurrentDate) {
+          console.log(hour);
           //setHourData((arr) => [...arr, 3600]);
           useRefHourData.current = [...useRefHourData.current, 3600];
 
@@ -320,6 +331,7 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
 
           //console.log("next hour product", nextHourFirstProduct);
         } else if (hour === currentHour) {
+          console.log(hour);
           useRefHourData.current = [...useRefHourData.current, totalSeconds];
           useRefColorData.current = [...useRefColorData.current, "red"];
           useRefDtReason.current = [

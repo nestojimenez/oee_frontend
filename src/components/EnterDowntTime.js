@@ -51,8 +51,8 @@ const EnterDowntTime = () => {
     var raw = JSON.stringify({
       id_products: "5",
       id_stations: station_id.toString(),
-      created_at: subtractHours(new Date(), 7),
-      updated_at: subtractHours(new Date(), 7),
+      created_at: subtractHours(new Date(), 8),  //7 para horario de verano y 8 para horario de invierno
+      updated_at: subtractHours(new Date(), 8),
       id_dt_reason: reasonId,
       dt_reason: reasonSelected,
       dummy: 1,
@@ -123,9 +123,25 @@ const EnterDowntTime = () => {
 
   ////////////////////////////////////////////////////////////////////////////////////////
   const onChange = (e) => {
-    console.log(e.target.value.split(",")[1].trimStart());
+    //Make a function that takes a string and trim it on the first space found and return all what is after the space
+    const trimString = (str) => {
+      let newStr = "";
+      for (let i = 0; i < str.length; i++) {
+        if (str[i] === " ") {
+          newStr = str.slice(i + 1);
+          break;
+        }
+      }
+      return newStr;
+    }
+
+    //console.log(trimString(e.target.value));
+    //console.log(e.target.value);
+    //console.log(e.target.value.split(",")[1].trimStart());
     setReasonId(e.target.value.split(" ")[0]);
-    setReasonSelected(e.target.value.split(",")[1].trimStart());
+    //console.log(e.target.value.split(" ")[0]);
+    //setReasonSelected(e.target.value.split(",")[1].trimStart());
+    setReasonSelected(trimString(e.target.value));
   };
 
   useEffect(() => {
@@ -140,7 +156,7 @@ const EnterDowntTime = () => {
   return (
     <div>
       <div className="downtime-frame" style={style}>
-        Enter DownTime
+        Enter DownTime {dtFrame_id}
         <select className="button-24" onChange={onChange}>
           {dtReasons.map((dat, index) => {
             return (

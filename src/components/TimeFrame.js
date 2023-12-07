@@ -62,8 +62,8 @@ const TimeFrame = ({ durationSecs, bgColor, timeFrameId, dtReason}) => {
       onClick={(e) => loadDowntTime(e, bgColor)}
     >
       <p className="down-time-reason">
-        <span className="tooltiptext">Create a component to show information about DT</span>
-        {dtReason}</p>
+        <span className="tooltiptext">Createx a component to show information about DT</span>
+        {dtReason} {timeFrameId}</p>
     </div>
   );
 };

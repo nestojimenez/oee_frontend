@@ -31,16 +31,16 @@ ChartJS.register(
 const MultiChart = () => {
   //useSelector for dt by hour
   const dt_hour = useSelector((state) => state.dt);
-  console.log(dt_hour);
+  //console.log(dt_hour);
   /////////////////////////////////////////////////
   //useSelector for performance by hour////////
   /////////////////////////////////////////////
   const performance_hour = useSelector((state) => state.performance);
   //Sort array by hour
-  console.log(performance_hour);
+  //console.log(performance_hour);
   const performanceHour = performance_hour;
   performanceHour.sort((a, b) => (a.hour > b.hour ? 1 : -1));
-  console.log('Sorted Array', performanceHour);
+  //console.log('Sorted Array', performanceHour);
 
   ///////////////////////////////////////////////
   const chartData = {

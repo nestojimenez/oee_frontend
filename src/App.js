@@ -5,11 +5,13 @@ import Station_Frame from "./components/Station_Frame";
 import "../node_modules/bootstrap-icons/font/bootstrap-icons.css";
 import ShiftProvider from "./context/ShiftContext.js";
 
-
 //Setup Redux
 import { Provider } from "react-redux";
 import store from "./redux/store";
 import EnterDowntTime from "./components/EnterDowntTime";
+import DownTimeGraph from "./components/DownTime_Graph/DownTimeGraph.js";
+import DownTimePareto from "./components/DownTime_Graph/DownTimePareto.js";
+import PerformanceGraph from "./components/Performance_Graph/PerformanceGraph.js";
 
 function App() {
   function subtractHours(date, hours) {
@@ -45,7 +47,7 @@ function App() {
   };
 
   setInterval(() => {
-    addMachinePerformance();
+    //addMachinePerformance();
   }, 10000);
   //addMachinePerformance();
   return (
@@ -54,9 +56,12 @@ function App() {
         <ShiftProvider>
           <Station_Frame />
           <Shift_Hours_Frame />
-          <EnterDowntTime/>
+          <EnterDowntTime />
         </ShiftProvider>
       </div>
+      {/*<DownTimeGraph />*/}
+      {<DownTimePareto/>}
+      <PerformanceGraph/>
     </Provider>
   );
 }

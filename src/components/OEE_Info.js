@@ -18,7 +18,7 @@ const OEE_Info = () => {
     }
   });
 
-  console.log(dt_hour);
+  //console.log(dt_hour);
 
   return (
     <div className="station-info">

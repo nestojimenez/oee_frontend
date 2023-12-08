@@ -32,6 +32,7 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
   const useRefSecondProduce = useRef([]);
   const useRefTimeFrameId = useRef([]);
   const useRefIsDummy = useRef([]);
+  const useRefPassFail = useRef([]);
 
   //Variable to store IDs of all TimeFrames
   //const [timeFrameId, setTimeFrameId] = useState([]);
@@ -96,6 +97,7 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
     useRefTimeFrameId.current = [];
     useRefDtReason.current = [];
     useRefIsDummy.current = [];
+    useRefPassFail.current = [];
     dispatch(
       outputHour({
         7: 0,
@@ -140,7 +142,7 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
 
       let data = await res.json();
 
-      //console.log(data.length);
+      //console.log(data);
       if (data.length !== 0) {
         let sumSeconds = 0;
         let arraySum = [];
@@ -194,6 +196,9 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
 
           //Push frameId into useref variable
           useRefTimeFrameId.current = [...useRefTimeFrameId.current, dat.id];
+
+          //Push pass/fail into useref variable
+          useRefPassFail.current = [...useRefPassFail.current, dat.passfail];
 
           if (dat.dt_reason) {
             useRefDtReason.current = [...useRefDtReason.current, dat.dt_reason];
@@ -409,6 +414,7 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
                 producePartTime={useRefSecondProduce.current[index]}
                 currentHour={hour}
                 isDummy={useRefIsDummy.current[index]}
+                passFail = {useRefPassFail.current[index]}
               />
             );
           })

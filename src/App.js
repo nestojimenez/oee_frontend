@@ -25,10 +25,11 @@ function App() {
     myHeaders.append("Content-Type", "application/json");
 
     var raw = JSON.stringify({
-      id_products: "2", //5 o 2
-      id_stations: "2", //2
+      id_products: "7", //5 o 2
+      id_stations: "7", //2
       created_at: subtractHours(new Date(), 8),
       updated_at: subtractHours(new Date(), 8),
+      passfail: "0"
     });
 
     //toISOString().toLocaleString("en-US", {timeZone: 'America/Tijuana', hour12:false}),

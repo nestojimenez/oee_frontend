@@ -12,6 +12,7 @@ import EnterDowntTime from "./components/EnterDowntTime";
 import DownTimeGraph from "./components/DownTime_Graph/DownTimeGraph.js";
 import DownTimePareto from "./components/DownTime_Graph/DownTimePareto.js";
 import PerformanceGraph from "./components/Performance_Graph/PerformanceGraph.js";
+import ScrapGraph from "./components/Scrap_Graph/ScrapGraph.js";
 
 function App() {
   function subtractHours(date, hours) {
@@ -60,9 +61,10 @@ function App() {
           <EnterDowntTime />
         </ShiftProvider>
       </div>
-      {/*<DownTimeGraph />*/}
+      {<DownTimeGraph />}
       {<DownTimePareto/>}
-      <PerformanceGraph/>
+      {<PerformanceGraph/>}
+      {<ScrapGraph/>}
     </Provider>
   );
 }

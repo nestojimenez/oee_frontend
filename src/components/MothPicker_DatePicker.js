@@ -14,7 +14,8 @@ const year = useSelector((state) => state.date.year);
 const dispath = useDispatch();
 
 const selectMonth = (e) => {
-    //console.log(e.target.value)
+    console.log(e.target.value)
+  
     const date = {day:day, month:e.target.value, year:year}
     //console.log(date.month)
     dispath(loadDate(date))

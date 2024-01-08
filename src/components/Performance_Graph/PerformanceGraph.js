@@ -36,7 +36,7 @@ ChartJS.register(
 
 
 
-const CT = 4;
+//const CT = 4;
 const SLOWPEED = 65;
 
 //create an array call shift that will have string numbers from 7 to 19
@@ -74,6 +74,9 @@ const months = [
 
 const PerformanceGraph = () => {
 
+  //Load from redux product selected CT
+  const cycleTime = useSelector((state) => state.product.cycle_time);
+
   //Load from redux state dateSelected
   const dateSelected = useSelector((state) => state.date);
   const currentStation = useSelector((state) => state.station);
@@ -91,7 +94,7 @@ const PerformanceGraph = () => {
       day = day;
     }
 
-    if (month.length === 1) {
+    if (Number(month) <10) {
       month = "0" + month;
     } else {
       month = month;
@@ -189,7 +192,7 @@ const PerformanceGraph = () => {
       const theoParts = {};
       for (let prop in sumSeconds) {
         console.log(prop, sumSeconds[prop]);
-        theoParts[prop] = Math.floor(sumSeconds[prop] / CT);
+        theoParts[prop] = Math.floor(sumSeconds[prop] / cycleTime);
       }
       console.log(theoParts);
       return theoParts;

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Bar } from "react-chartjs-2";
 
-const CT = 5;
+//const CT = 5;
 const SLOWPEED = 65;
 
 const startShiftObject = {
@@ -74,6 +74,10 @@ const shift_build = shift.map((item) => {
 //console.log(shift_build);
 
 const DownTimePareto = () => {
+
+  //Load from redux product selected CT
+  const cycleTime = useSelector((state) => state.product.cycle_time);
+
   //Load from redux state dateSelected
   const dateSelected = useSelector((state) => state.date);
   const currentStation = useSelector((state) => state.station);
@@ -267,11 +271,11 @@ const DownTimePareto = () => {
     for (let i = 0; i < dt_reason.length; i++) {
       const hour = data.filter(
         (item) =>
-          item.dt_reason === dt_reason[i] && item.seconds > CT + (SLOWPEED - CT)
+          item.dt_reason === dt_reason[i] && item.seconds > cycleTime + (SLOWPEED - cycleTime)
       ); //Filtes by hour and by second between CT and - CT-SLOWPEED
 
       const seconds = hour.reduce((acc, item) => acc + item.seconds, 0);
-      dt_hour.push({ hour: dt_reason[i], dt: (Number(seconds)/43200).toString()}); //push hour and seconds to the array, second converted to hours
+      dt_hour.push({ hour: dt_reason[i], dt: (Number(seconds)/3600).toString()}); //push hour and seconds to the array, second converted to hours
     }
     console.log(dt_hour);
     

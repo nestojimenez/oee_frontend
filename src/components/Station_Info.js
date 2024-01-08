@@ -4,7 +4,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import { useDispatch } from "react-redux";
 import { loadStation } from "../redux";
-import factoryAtlas from '../images/MachineAnalytics.jpg'
+import { loadProduct } from "../redux";
+import factoryAtlas from '../images/factoryAtlas_1.jpg'
 
 const Station_Info = () => {
   const [stations, setStations] = useState("");
@@ -30,14 +31,16 @@ const Station_Info = () => {
     },
   };
 
-  const getStationID = (e) => {
+  const getStationID = async(e) => {
     const target = e.target.value;
-    //console.log(target);
+    console.log(target);
 
     const selectedStation = stations.filter((station) => {
       return station.st_name == target; //Get selected station, TO DO: re-reder with the selected station the rest of the page
     });
 
+    console.log("Selected station", selectedStation[0].id);
+    
     stations.filter((station) => {
       return station.st_name == target;
     });
@@ -46,6 +49,20 @@ const Station_Info = () => {
     //Load station selected to Redux store, thru the dispatch method
     dispath(loadStation(selectedStation[0]));
     //console.log("Current stations", station);
+
+    //Look for product related to the selected station
+    let productStationFetch = await fetch(`/products_stations_byid/${selectedStation[0].id}`, options);
+    let productStationData = await productStationFetch.json();
+    console.log("Product Station: ", productStationData);
+    const productId = productStationData[0].id_products;
+    console.log("Product ID: ", productId);
+    let productFetch = await fetch(`/products/${productId}`, options);
+    let productData = await productFetch.json();
+    const product = productData[0];
+    console.log("Product: ", product);
+    dispath(loadProduct(product));
+
+
   };
 
   useEffect(() => {
@@ -53,6 +70,7 @@ const Station_Info = () => {
       let res = await fetch("/stations", options);
       let data = await res.json();
       //console.log("Transaction: ", selectedStation);
+      
       setStations(data);
       dispath(loadStation(data[0]));
     })();
@@ -60,7 +78,7 @@ const Station_Info = () => {
 
   return (
     <div className="station-info">
-      <img src={factoryAtlas} style={{width: '35%'}}></img>
+      <img src={factoryAtlas} style={{width: '40%'}}></img>
       <p className="station">STATION</p>
       
       {stations ? (

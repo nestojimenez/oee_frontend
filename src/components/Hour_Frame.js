@@ -7,6 +7,8 @@ import { useSelector } from "react-redux/es/hooks/useSelector";
 import { useDispatch } from "react-redux";
 import { clearDT, loadDT, outputHour, loadPerformance, clearPerformance  } from "../redux";
 
+
+
 const months = [
   "Empty",
   "January",
@@ -24,7 +26,10 @@ const months = [
 ];
 
 const Hour_Frame = ({ hour, update, firstProductByHour }) => {
-  const cycleTime = 4.0;
+
+  const cycleTime = useSelector((state) => state.product.cycle_time);
+  console.log(cycleTime);
+  //const cycleTime = 4.0;
   const [render, setReder] = useState(true);
 
   const useRefHourData = useRef([]);

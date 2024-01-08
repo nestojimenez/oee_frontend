@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Bar } from "react-chartjs-2";
 
-const CT = 5;
+//const CT = 5;
 const SLOWPEED = 65;
 
 const startShiftObject = {
@@ -74,6 +74,10 @@ const shift_build = shift.map((item) => {
 console.log(shift_build);
 
 const DownTimeGraph = () => {
+
+  //Load from redux product selected CT
+  const cycleTime = useSelector((state) => state.product.cycle_time);
+
   //Load from redux state dateSelected
   const dateSelected = useSelector((state) => state.date);
   const currentStation = useSelector((state) => state.station);
@@ -240,7 +244,7 @@ const DownTimeGraph = () => {
       const hour = data.filter(
         (item) =>
           item.shift_hour === shift_build[i] &&
-          item.seconds > CT + (SLOWPEED - CT)
+          item.seconds > cycleTime + (SLOWPEED - cycleTime)
       ); //Filtes by hour and by second between CT and - CT-SLOWPEED
 
       const seconds = hour.reduce((acc, item) => acc + item.seconds, 0);

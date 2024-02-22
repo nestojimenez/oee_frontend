@@ -37,7 +37,7 @@ ChartJS.register(
 
 
 //const CT = 4;
-const SLOWPEED = 65;
+const SLOWPEED = 30;
 
 //create an array call shift that will have string numbers from 7 to 19
 const shift = [
@@ -165,7 +165,7 @@ const PerformanceGraph = () => {
     const sumShiftHours = (dataArray) => {
       return dataArray.reduce((acc, curr) => {
         if (acc[curr.shift_hour] && curr.seconds < SLOWPEED) {
-          if (curr.shift_hour === "9") console.log(curr.seconds);
+          if (curr.shift_hour === "16") console.log(curr.seconds);
 
           acc[curr.shift_hour] += curr.seconds;
         } else if (curr.seconds < SLOWPEED) {
@@ -336,7 +336,7 @@ const PerformanceGraph = () => {
   };
 
   useEffect(() => {
-    //setData([]);
+    ////s//etData([]);
     const date = dateToString(
       dateSelected.year,
       dateSelected.month,

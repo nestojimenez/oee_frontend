@@ -229,7 +229,7 @@ const DownTimePareto = () => {
       day = day;
     }
 
-    if (month.length === 1) {
+    if (Number(month) <10) {
       month = "0" + month;
     } else {
       month = month;

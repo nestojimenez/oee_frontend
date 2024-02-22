@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { Bar } from "react-chartjs-2";
 
 //const CT = 5;
-const SLOWPEED = 65;
+const SLOWPEED = 30;
 
 const startShiftObject = {
   id: 0,
@@ -22,7 +22,7 @@ const start_time = "08";
 const end_time = "09";
 const id = "7";
 
-//create an array call shift that will have string numbers from 7 to 19
+////create an array call shift that will have string numbers from 7 to 19
 const shift = [
   "7",
   "8",
@@ -227,7 +227,7 @@ const DownTimeGraph = () => {
       day = day;
     }
 
-    if (month.length === 1) {
+    if (Number(month) <10) {
       month = "0" + month;
     } else {
       month = month;
@@ -261,7 +261,7 @@ const DownTimeGraph = () => {
       {
         label: `Downtime per shift ${dateSelected.month} - ${dateSelected.day} - ${dateSelected.year}`,
         data: dtHourSeconds(data).map((data) => {
-          return data.dt;
+          return data.dt//(Number(data.dt)/3600).toFixed(2)*100;
         }),
         borderColor: "red",
         backgroundColor: "red",

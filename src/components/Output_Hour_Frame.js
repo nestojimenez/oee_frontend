@@ -5,7 +5,11 @@ import { useSelector } from "react-redux/es/hooks/useSelector";
 
 const Output_Hour_Frame = () => {
   //const output = [150, 155, 110, 210, 180, 190, 210, 210, 225, 250, 250, 250 ]
-  const target = 250;
+
+  const cycleTime = useSelector((state) => state.product.cycle_time);
+  console.log(cycleTime);
+
+  const target = 3600/cycleTime;
 
   const output_hour = useSelector((state) => state.output_hour);
   console.log(output_hour);

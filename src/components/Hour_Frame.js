@@ -218,7 +218,7 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
             useRefColorData.current = [...useRefColorData.current, "green"];
           } else if (
             Number(cycleTime) < Number(timeSeconds) &&
-            Number(timeSeconds) < 60
+            Number(timeSeconds) < 30
           ) {
             useRefColorData.current = [...useRefColorData.current, "yellow"];
           } else {

@@ -20,7 +20,7 @@ const months = [
 const initialState = {
     day: new Date().getDate().toString(),
     month: months[new Date().getMonth() +1].toString(),
-    year: '2023',
+    year: '2024',
 }
 
 const dateReducer = (state=initialState, action)=>{

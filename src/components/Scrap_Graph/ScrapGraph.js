@@ -248,7 +248,7 @@ const ScrapGraph = () => {
 
   //create a react component to put on table data returned from the fetch function
   const AllData = ({ data }) => {
-    //console.log(data);
+    ////console.log(data);
     return (
       <table>
         {data.map((item, index) => {

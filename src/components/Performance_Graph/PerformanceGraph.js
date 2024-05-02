@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Line } from "react-chartjs-2";
-
-
-
 
 import {
   Chart as ChartJS,

@@ -51,7 +51,7 @@ const Shift_Frame = () => {
   useEffect(() => {
     let intervalId = setInterval(() => {
       setUpdate(!update);
-    }, 60000);
+    }, 30000);
 
     return () => {
       clearInterval(intervalId);

@@ -28,7 +28,7 @@ const months = [
 const Hour_Frame = ({ hour, update, firstProductByHour }) => {
 
   const cycleTime = useSelector((state) => state.product.cycle_time);
-  console.log(cycleTime);
+  //console.log(cycleTime);
   //const cycleTime = 4.0;
   const [render, setReder] = useState(true);
 
@@ -224,7 +224,13 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
           } else {
             //Review if tiem frame has a DT reason loaded
             if (dat.dt_reason) {
-              useRefColorData.current = [...useRefColorData.current, "#A52A2A"];
+              console.log(dat.dt_reason);
+              if (dat.dt_reason.includes("Op")) {
+                useRefColorData.current = [...useRefColorData.current, "blue"];  
+              }else{
+                useRefColorData.current = [...useRefColorData.current, "#A52A2A"];
+              }
+              
             } else {
               useRefColorData.current = [...useRefColorData.current, "red"];
             }

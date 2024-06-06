@@ -165,7 +165,7 @@ const PerformanceGraph = () => {
 
           acc[curr.shift_hour] += curr.seconds;
         } else if (curr.seconds < SLOWPEED) {
-          if (curr.shift_hour === "9") console.log(curr.seconds);
+          if (curr.shift_hour === "8") console.log(curr.seconds);
           acc[curr.shift_hour] = curr.seconds;
         }
         return acc;

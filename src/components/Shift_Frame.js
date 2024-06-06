@@ -19,7 +19,18 @@ const months = [
 ];
 
 const Shift_Frame = () => {
-  const currentShift = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
+ 
+  //useSelector for Shift Selected
+  const shift_selected = useSelector((state) => state.shift.shift_selected);
+  let currentShift = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+
+  if(shift_selected === 'First Shift' || shift_selected === 'Third Shift'){
+    currentShift = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
+  }else if(shift_selected === 'Second Shift' || shift_selected === 'Fourth Shift'){
+    currentShift = [19, 20, 21, 22, 23, 0, 1, 2, 3, 4, 5, 6];
+  }
+
+  //const currentShift = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
   //const reverse = currentShift.reverse();
   //7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
 
@@ -84,7 +95,7 @@ const Shift_Frame = () => {
         //console.log(hour);
         useRefFirstHourProduct.current.push([data[0], hour]);
 
-        //console.log(useRefFirstHourProduct.current);
+        console.log(useRefFirstHourProduct.current);
       })();
     });
   }, [update]);

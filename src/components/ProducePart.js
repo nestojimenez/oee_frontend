@@ -1,7 +1,7 @@
 import React from "react";
 
 const ProducePart = ({ producePartTime, currentHour, isDummy, passFail }) => {
-  console.log("Produce part time: ", passFail);
+  //console.log("Produce part time: ", passFail);
   const secondHour = 3600;
   const durationPercentage = Number(producePartTime) * 0.0276;
   //const durationPercentage = 100*(Number(producePartTime) / Number(secondHour));

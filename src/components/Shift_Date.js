@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import DatePicker from "./DatePicker";
 //Set up the use of the Reducer
 import { useSelector } from "react-redux/es/hooks/useSelector";
+import Shift_Shift from "./Shift_Shift";
 
 const Shift_Date = () => {
   const [timestamp, setTimestamp] = useState(0);
@@ -57,6 +58,8 @@ const Shift_Date = () => {
       {datePickerVisible && <DatePicker/>}
       <p className="station">Date Selected</p>
       <p className="station-name">{`${dateSelected.day}/${dateSelected.month}/${dateSelected.year}`}</p>
+      <p className="station">Shift Selected</p>
+      <Shift_Shift />
     </div>
   );
 };

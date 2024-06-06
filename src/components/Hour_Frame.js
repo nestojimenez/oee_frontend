@@ -25,10 +25,11 @@ const months = [
   "December",
 ];
 
-const Hour_Frame = ({ hour, update, firstProductByHour }) => {
+const Hour_Frame = ({ hour, update, firstProductByHour }) => {  
 
   const cycleTime = useSelector((state) => state.product.cycle_time);
-  //console.log(cycleTime);
+  //console.log(hour);
+  //console.log(firstProductByHour);
   //const cycleTime = 4.0;
   const [render, setReder] = useState(true);
 
@@ -63,6 +64,9 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
   //useSelector for performance by hour
   const performance_hour = useSelector((state) => state.performance);
 
+  //useSelecto for shift selected
+  const shiftSelector = useSelector((state) => state.shift.shift_selected);
+  //console.log('Shift Selected', shiftSelector);
   //Date for the query of machine perfomarmace table "20230922"
   const day =
     dateSelected.day < 10 ? `0${dateSelected.day}` : `${dateSelected.day}`;
@@ -103,7 +107,7 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
     useRefDtReason.current = [];
     useRefIsDummy.current = [];
     useRefPassFail.current = [];
-    dispatch(
+    /*dispatch(
       outputHour({
         7: 0,
         8: 0,
@@ -118,7 +122,7 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
         17: 0,
         18: 0,
       })
-    );
+    );*/
     dispatch(clearDT());
     dispatch(clearPerformance());
 
@@ -129,7 +133,7 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
       months[currentDate.getMonth() + 1] !== dateSelected.month
         ? false
         : true;
-    console.log(isCurrentDate);
+    //console.log(isCurrentDate);
 
     (async () => {
       if (hour < 10) {
@@ -139,6 +143,10 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
         startHour = `${hour}`;
         endHour = `${hour + 1}`;
       }
+
+     
+        console.log("StartHour", startHour, "EndHour", endHour )
+      
 
       let res = await fetch(
         `/machine_performance/date_range/${startHour}/${endHour}/${dateSelected.year}${month}${day}/${stationId}`,
@@ -160,10 +168,15 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
 
         //Update qty per hour (output_hour)////////////////////////////////////////
         //console.log(output_hour);
+        if(shiftSelector === "Second Shift" || shiftSelector === "Fourth Shift"){
+          console.log("Second Shift", shiftSelector);
+        }
+
+        console.log(output_hour);
         let newOutputHour = output_hour;
         newOutputHour[hour] = parseInt(data.length);
-        //console.log(data.length);
-        //console.log(newOutputHour);
+        console.log(data.length);
+        console.log(newOutputHour);
         dispatch(outputHour(newOutputHour));
         //console.log(output_hour);
 
@@ -224,7 +237,7 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
           } else {
             //Review if tiem frame has a DT reason loaded
             if (dat.dt_reason) {
-              console.log(dat.dt_reason);
+              //console.log(dat.dt_reason);
               if (dat.dt_reason.includes("Op")) {
                 useRefColorData.current = [...useRefColorData.current, "blue"];  
               }else{
@@ -257,11 +270,11 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
         //Add red to incomplete hour that already pass or to current hour/////
         if (sum < 3550 /*&& hour !== currentHour*/ && useRefHourData.current) {
           if(hour === currentHour){
-            console.log(hour); //Do nothing
-            console.log(totalSeconds - sum);
+            //console.log(hour); //Do nothing
+            //console.log(totalSeconds - sum);
             useRefHourData.current = [...useRefHourData.current, totalSeconds - sum];
           }else{ ///Add red to incomplete hour.
-            console.log(hour);
+            //console.log(hour);
             useRefHourData.current = [...useRefHourData.current, 3600 - sum - 5];
           }
 
@@ -285,7 +298,12 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
             ];
 
             if (dt_reason[0].dt_reason !== null) {
-              useRefColorData.current = [...useRefColorData.current, "#A52A2A"];
+              if(dt_reason[0].dt_reason.includes("Op")){
+                useRefColorData.current = [...useRefColorData.current, "#blue"];
+              }else{
+                useRefColorData.current = [...useRefColorData.current, "#A52A2A"];
+              }
+              
             } else {
               useRefColorData.current = [...useRefColorData.current, "red"];
             }
@@ -296,9 +314,9 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
 
         ///////////////////////////////////////////////////////////////
         //Add red to a current hour where no product has been enter
-        console.log(isCurrentDate)
+        //console.log(isCurrentDate)
         if (sum < 3550 && sum < totalSeconds - 50 && hour === currentHour && !isCurrentDate) {
-          console.log(hour);
+          //console.log(hour);
           useRefHourData.current = [
             ...useRefHourData.current,
             totalSeconds - sum,
@@ -314,7 +332,7 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
         const totalSeconds = currentMinutes * 60 + currentSeconds;
         
         if (hour < currentHour || !isCurrentDate) {
-          console.log(hour);
+          //console.log(hour);
           //setHourData((arr) => [...arr, 3600]);
           useRefHourData.current = [...useRefHourData.current, 3600];
 
@@ -347,7 +365,7 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
 
           //console.log("next hour product", nextHourFirstProduct);
         } else if (hour === currentHour) {
-          console.log(hour);
+          //console.log(hour);
           useRefHourData.current = [...useRefHourData.current, totalSeconds];
           useRefColorData.current = [...useRefColorData.current, "red"];
           useRefDtReason.current = [
@@ -392,7 +410,7 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
 
       /////////////////////////////////////////////////////////
     })();
-  }, [stationId, update, dateSelected, activate]);
+  }, [stationId, update, dateSelected, activate, shiftSelector]);
 
   return (
     <div className="container">

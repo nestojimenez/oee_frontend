@@ -71,7 +71,7 @@ const shift_build = shift.map((item) => {
     return item;
   }
 });
-console.log(shift_build);
+//console.log(shift_build);
 
 const DownTimeGraph = () => {
 
@@ -81,7 +81,7 @@ const DownTimeGraph = () => {
   //Load from redux state dateSelected
   const dateSelected = useSelector((state) => state.date);
   const currentStation = useSelector((state) => state.station);
-  console.log("Current Date", currentStation);
+  //console.log("Current Date", currentStation);
 
   //create a state for the data
   const [data, setData] = useState([]);
@@ -100,9 +100,9 @@ const DownTimeGraph = () => {
 
           const newStr =
             start_time === "10" ? start_time : start_time.replace("0", ""); //take current day and remove the cero at the beggining
-          console.log("New string", newStr);
+          //console.log("New string", newStr);
           const startTime = parseInt(newStr); //parse to int
-          console.log("Start time for start shift ", startTime);
+          //console.log("Start time for start shift ", startTime);
           startShiftObject.created_at = new Date(
             dateSelected.year,
             months.indexOf(dateSelected.month) - 1,
@@ -129,12 +129,12 @@ const DownTimeGraph = () => {
           return;
         } else {
           //Get created_at from first element of query to add an element at the beggining of the our to get time elapsed from the beginig of the shift to the firts element of the query
-          console.log("Start time for query ", start_time);
+          //console.log("Start time for query ", start_time);
           const newStr =
             start_time === "10" ? start_time : start_time.replace("0", ""); //take current day and remove the cero at the beggining
-          console.log("New string", newStr);
+          //console.log("New string", newStr);
           const startTime = parseInt(newStr); //parse to int
-          console.log("Start time for start shift ", startTime);
+          //console.log("Start time for start shift ", startTime);
           startShiftObject.created_at = new Date(
             dateSelected.year,
             months.indexOf(dateSelected.month) - 1,
@@ -160,7 +160,7 @@ const DownTimeGraph = () => {
           setData((prevData) => {
             return [...prevData, ...newData];
           }); //set the data to the state to render
-          console.log("Data ben query", data);
+          //console.log("Data ben query", data);
         }
       })
       .catch((err) => console.log(err));
@@ -172,7 +172,7 @@ const DownTimeGraph = () => {
     const date2 = new Date(data.LEAD_created_at);
     const difference = date2.getTime() - date1.getTime();
     const seconds = difference / 1000;
-    console.log(seconds);
+    //console.log(seconds);
     return seconds;
   };
 
@@ -197,7 +197,7 @@ const DownTimeGraph = () => {
 
   //create a react component to put on table data returned from the fetch function
   const DownTimeGraphData = ({ data }) => {
-    console.log(data);
+    //console.log(data);
     return (
       <table>
         {data.map((item, index) => {
@@ -276,7 +276,7 @@ const DownTimeGraph = () => {
       dateSelected.month,
       dateSelected.day
     );
-    console.log(date);
+    //console.log(date);
     shift_build.forEach((item, index) => {
       fetchDownTimeGraph(item, shift_build[index + 1], date, currentStation.id);
     });

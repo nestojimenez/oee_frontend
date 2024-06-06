@@ -63,7 +63,7 @@ const TimeFrame = ({ durationSecs, bgColor, timeFrameId, dtReason}) => {
     >
       <p className="down-time-reason">
         <span className="tooltiptext">Createx a component to show information about DT</span>
-        {dtReason} {timeFrameId}</p>
+        {dtReason} {/*timeFrameId*/}</p>
     </div>
   );
 };

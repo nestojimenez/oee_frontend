@@ -63,7 +63,35 @@
   
 }
 
-.down-time-reason .tooltiptext {
+/*.tooltip {
+  position: relative;
+  display: inline-block;
+  /*border-bottom: 1px dotted black; /* If you want dots under the hoverable text 
+}*/
+
+/* Tooltip text */
+.time-frame .tooltiptext {
+  visibility: hidden;
+  width: 200px;
+  height: 100px;
+  background-color: #121212;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+ 
+  /* Position the tooltip text - see examples below! */
+  position: fixed;
+  /*left: 0px;
+  top: 0px;*/
+  z-index: 99;
+}
+/* Show the tooltip text when you mouse over the tooltip container */
+.time-frame:hover .tooltiptext {
+  visibility: visible;
+}
+
+.down-time-reason {
   visibility: hidden;
   width: 120px;
   height: 250px;
@@ -75,12 +103,15 @@
  
   /* Position the tooltip text - see examples below! */
   position: absolute;
+  
 }
 
+
+
 /* Show the tooltip text when you mouse over the tooltip container */
-.down-time-reason:hover .tooltiptext {
+/*.down-time-reason:hover {
   visibility: visible;
-}
+}*/
 
 .circle {
   position: absolute;

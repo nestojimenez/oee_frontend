@@ -108,7 +108,7 @@ const ScrapGraph = () => {
     const date2 = new Date(data.LEAD_created_at);
     const difference = date2.getTime() - date1.getTime();
     const seconds = difference / 1000;
-    //console.log(seconds);
+    console.log(seconds);
     return seconds;
   };
 
@@ -152,7 +152,7 @@ const ScrapGraph = () => {
     return newDataArray;
   };
 
-  //Sum all parts per hour
+  //Sum all parts per hoursdf
   const sumTotalPartPerHour = (dataArray) => {
     return dataArray.reduce((acc, curr) => {
       if (acc[curr.shift_hour]) {
@@ -221,7 +221,7 @@ const ScrapGraph = () => {
 
   const calculateScrapDataForGraph = async (date, id) => {
     const response = await fetchAllData(date, id);
-    console.log("All Data", response);
+    console.log("All Dta", response);
     setUseData(response);
 
     const totalPartsPerHour = sumTotalPartPerHour(response);

@@ -5,7 +5,7 @@ import { useSelector } from "react-redux/es/hooks/useSelector";
 import { useDispatch } from "react-redux";
 import { loadStation } from "../redux";
 import { loadProduct } from "../redux";
-import factoryAtlas from '../images/FactoryAtlas1024_500_121212.png'
+import factoryAtlas from '../images/FactoryAtlas1024_300_121212.png'
 
 const Station_Info = () => {
   const [stations, setStations] = useState("");
@@ -78,7 +78,7 @@ const Station_Info = () => {
 
   return (
     <div className="station-info">
-      <img src={factoryAtlas} style={{width: '80%'}}></img>
+      <img src={factoryAtlas} style={{width:'80%'}}></img>
       <p className="station">STATION</p>
       
       {stations ? (

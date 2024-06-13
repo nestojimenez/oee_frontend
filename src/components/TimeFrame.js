@@ -57,8 +57,8 @@ const TimeFrame = ({ durationSecs, bgColor, timeFrameId, dtReason }) => {
     
       hoverStyle = {
         visibility: "hidden",
-        width: "200px",
-        height: "100px",
+        width: "400px",
+        height: "50px",
         backgroundColor: "#121212",
         color: "#fff",
         textAlign: "center",
@@ -67,14 +67,14 @@ const TimeFrame = ({ durationSecs, bgColor, timeFrameId, dtReason }) => {
         /* Position the tooltip text - see examples below! */
         position: "fixed",
         top: e.pageY,
-        left: e.pageX,
+        left: e.pageX
       };
     
   };
 
   let style = {};
 
-  if (bgColor === "red" || bgColor === "#A52A2A") {
+  if (bgColor === "red" || bgColor === "#A52A2A" || bgColor === "blue") {
     style = {
       width: `${durationPercentage}%`,
       backgroundColor: bgColor,
@@ -92,7 +92,7 @@ const TimeFrame = ({ durationSecs, bgColor, timeFrameId, dtReason }) => {
       onMouseOver={(e) => mouseHover(e, bgColor)}
     >
       {dtReason}
-      {bgColor === "#A52A2A"&&<span class="tooltiptext" style={hoverStyle}>
+      {(bgColor === "#A52A2A" || bgColor === 'blue')&&<span class="tooltiptext" style={hoverStyle}>
         {dtReason}
       </span>}
       {/*<p className="down-time-reason">

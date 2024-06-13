@@ -91,7 +91,7 @@ const ScrapGraph = () => {
     }
 
     //console.log(month);
-    if (Number(month) <10) {
+    if (Number(month) < 10) {
       month = "0" + month;
     } else {
       month = month;
@@ -108,7 +108,7 @@ const ScrapGraph = () => {
     const date2 = new Date(data.LEAD_created_at);
     const difference = date2.getTime() - date1.getTime();
     const seconds = difference / 1000;
-    console.log(seconds);
+    console.log("secfsdfsdfdf", seconds);
     return seconds;
   };
 
@@ -221,7 +221,7 @@ const ScrapGraph = () => {
 
   const calculateScrapDataForGraph = async (date, id) => {
     const response = await fetchAllData(date, id);
-    console.log("All Dta", response);
+    console.log("Allsdf Dta", response);
     setUseData(response);
 
     const totalPartsPerHour = sumTotalPartPerHour(response);
@@ -309,15 +309,47 @@ const ScrapGraph = () => {
         formatter: (value, context) => {
           return value;
         },
-        color: "#000000",
+        color: function (ctx) {
+          // use the same color as the border
+          return ctx.dataset.borderColor;
+        },
         labels: {
           title: {
             font: {
               weight: "bold",
+              size: 18,
             },
           },
-          value: {
-            color: "green",
+          //value: {
+          //color: 'green',
+
+          //}
+        },
+      },
+      legend: {
+        labels: {
+          font: {
+            size: 18,
+          },
+        },
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          font: {
+            size: 18,
+            weight: "bold",
+            //family:'vazir'
+          },
+        },
+      },
+      y: {
+        ticks: {
+          font: {
+            size: 18,
+            weight: "bold",
+            //family:'vazir'
           },
         },
       },
@@ -332,19 +364,15 @@ const ScrapGraph = () => {
       dateSelected.day
     );
     const id = currentStation.id;
-    console.log("Date", date);  
+    console.log("Date", date);
     calculateScrapDataForGraph(date, id);
   }, [dateSelected, currentStation]);
 
   return (
-    <div>
+    <div style={{width:'80vw', position:'relative', paddingRight:'10%', paddingLeft:'10%'}}>
       {useData.length === 0 ? <h1>Loading...</h1> : null}
       {/*<AllData data={useData} style={{ background: "white" }} />*/}
-      {
-        <Chart
-          data={chartData} plugins={[ChartDataLabels]} options={options}
-        />
-      }
+      {<Chart data={chartData} plugins={[ChartDataLabels]} options={options} />}
     </div>
   );
 };

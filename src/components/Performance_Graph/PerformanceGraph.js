@@ -12,10 +12,12 @@ import {
   Tooltip,
   LineController,
   BarController,
+  scales,
 } from "chart.js";
 
 import { Chart } from "react-chartjs-2";
-import ChartDataLabels from 'chartjs-plugin-datalabels';
+import ChartDataLabels from "chartjs-plugin-datalabels";
+import { color } from "chart.js/helpers";
 
 ChartJS.register(
   LinearScale,
@@ -26,11 +28,9 @@ ChartJS.register(
   Legend,
   Tooltip,
   LineController,
-  BarController,
+  BarController
   //ChartDataLabels,
 );
-
-
 
 //const CT = 4;
 const SLOWPEED = 30;
@@ -69,16 +69,23 @@ const months = [
 ];
 
 const PerformanceGraph = () => {
-
   //Load from redux product selected CT
   const cycleTime = useSelector((state) => state.product.cycle_time);
-  console.log(cycleTime);
+  console.log("cyclsdfd Time", cycleTime);
   //Load from redux state dateSelected
   const dateSelected = useSelector((state) => state.date);
   const currentStation = useSelector((state) => state.station);
 
   const [useData, setUseData] = useState([]);
   const [performanceData, setPerformanceData] = useState([]);
+
+  //Take average of % Performance for the entire shift
+  const averagePerformance = (dataArray) => {
+    const sum = dataArray.reduce((acc, curr) => {
+      return acc + curr.performance;
+    }, 0);
+    return sum / dataArray.length;
+  }
 
   //create a function that will convert day, month and year to a single string with the format YYYYMMDD
   const dateToString = (year, month, day) => {
@@ -90,7 +97,7 @@ const PerformanceGraph = () => {
       day = day;
     }
 
-    if (Number(month) <10) {
+    if (Number(month) < 10) {
       month = "0" + month;
     } else {
       month = month;
@@ -251,6 +258,9 @@ const PerformanceGraph = () => {
     completePerformaData = fillCompletePerformaData(completePerformaData);
     console.log(completePerformaData);
     setPerformanceData(completePerformaData);
+
+    const avgPerformance = averagePerformance(completePerformaData);  
+    console.log(avgPerformance);
   };
 
   //////////////////////////Chart Data configurarion///////////
@@ -286,26 +296,57 @@ const PerformanceGraph = () => {
     // ...your other options...
     plugins: {
       datalabels: {
-        align: 'end',
-        anchor: 'end',      
+        align: "end",
+        anchor: "end",
         formatter: (value, context) => {
           return value;
         },
-        color: '#000000',
+        color: function (ctx) {
+          // use the same color as the border
+          return ctx.dataset.borderColor;
+        },
         labels: {
           title: {
             font: {
-              weight: 'bold'
-            }
+              weight: "bold",
+              size: 18,
+            },
           },
-          value: {
-            color: 'green'
-          }
-        }
-      }
-    }
-  };
+          //value: {
+          //color: 'green',
 
+          //}
+        },
+      },
+      legend: {
+        labels: {
+          font: {
+            size: 18,
+          },
+        },
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          font: {
+            size: 18,
+            weight: "bold",
+            //family:'vazir'
+          },
+        },
+      },
+      y: {
+        ticks: {
+          font: {
+            size: 18,
+            weight: "bold",
+            //family:'vazir'
+          },
+        },
+      },
+    },
+  };
 
   //create a react component to put on table data returned from the fetch function
   const PerformanceData = ({ data }) => {
@@ -348,10 +389,10 @@ const PerformanceGraph = () => {
   }, [dateSelected, currentStation]);
 
   return (
-    <div>
+    <div style={{width:'80vw', position:'relative', paddingRight:'10%', paddingLeft:'10%'}}>
       {useData.length === 0 ? <h1>Loading...</h1> : null}
       {/*<PerformanceData data={useData} style={{ background: "white" }} />*/}
-      {<Chart data={chartData} plugins={[ChartDataLabels]} options={options}/>}
+      {<Chart data={chartData} plugins={[ChartDataLabels]} options={options} />}
     </div>
   );
 };

@@ -160,7 +160,7 @@ const DownTimeGraph = () => {
           setData((prevData) => {
             return [...prevData, ...newData];
           }); //set the data to the state to render
-          //console.log("Data ben query", data);
+          console.log("Datsdfa ben query", data);
         }
       })
       .catch((err) => console.log(err));
@@ -284,7 +284,7 @@ const DownTimeGraph = () => {
   }, [dateSelected, currentStation]);
 
   return (
-    <div>
+    <div style={{width:'80vw', position:'relative', paddingRight:'10%', paddingLeft:'10%'}}>
       {data.length === 0 ? <h1>Loading...</h1> : null}
       {/*<DownTimeGraphData data={data} style={{ background: "white" }} />*/}
       <Bar data={chartData}/>

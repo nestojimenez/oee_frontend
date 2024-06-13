@@ -61,7 +61,7 @@ function App() {
           <EnterDowntTime />
         </ShiftProvider>
       </div>
-      {<DownTimeGraph />}
+      {/*<DownTimeGraph />*/}
       {<DownTimePareto/>}
       {<PerformanceGraph/>}
       {<ScrapGraph/>}

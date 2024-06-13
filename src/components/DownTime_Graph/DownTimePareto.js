@@ -95,7 +95,7 @@ const DownTimePareto = () => {
       .then((res) => res.json())
       .then((data) => { 
         //set the data to the state
-        console.log("Data from fetch", data);
+        console.log("Data from sdffeh", data);
         if (data.length === 0) {
           //If shift is empty
 
@@ -277,7 +277,7 @@ const DownTimePareto = () => {
       const seconds = hour.reduce((acc, item) => acc + item.seconds, 0);
       dt_hour.push({ hour: dt_reason[i], dt: (Number(seconds)/3600).toString()}); //push hour and seconds to the array, second converted to hours
     }
-    console.log(dt_hour);
+    console.log('Dt hour', dt_hour);
     
     //create function that order from highest to lowest using hour as reference insise the array of objects
     const orderArray = (array) => {
@@ -295,6 +295,8 @@ const DownTimePareto = () => {
 
     return orderArray((dt_hour));
   };
+
+  
 
 
   //////////////////////////Chart Data configurarion///////////////////////////////
@@ -315,6 +317,62 @@ const DownTimePareto = () => {
     ],
   };
 
+  const options = {
+    // ...your other options...
+    plugins: {
+      datalabels: {
+        align: "end",
+        anchor: "end",
+        formatter: (value, context) => {
+          return value;
+        },
+        color: function (ctx) {
+          // use the same color as the border
+          return ctx.dataset.borderColor;
+        },
+        labels: {
+          title: {
+            font: {
+              weight: "bold",
+              size: 18,
+            },
+          },
+          //value: {
+          //color: 'green',
+
+          //}
+        },
+      },
+      legend: {
+        labels: {
+          font: {
+            size: 18,
+          },
+        },
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          font: {
+            size: 18,
+            weight: "bold",
+            //family:'vazir'
+          },
+        },
+      },
+      y: {
+        ticks: {
+          font: {
+            size: 18,
+            weight: "bold",
+            //family:'vazir'
+          },
+        },
+      },
+    },
+  };
+
   useEffect(() => {
     setData([]);
     const date = dateToString(
@@ -330,10 +388,10 @@ const DownTimePareto = () => {
   }, [dateSelected, currentStation]);
 
   return (
-    <div>
+    <div style={{width:'80vw', position:'relative', paddingRight:'10%', paddingLeft:'10%'}}>
       {data.length === 0 ? <h1>Loading...</h1> : null}
       {/*<DownTimeGraphData data={data} style={{ background: "white" }} />*/}
-      <Bar data={chartData} />
+      <Bar data={chartData} options={options}/>
     </div>
   );
 };

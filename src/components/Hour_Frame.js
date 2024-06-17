@@ -300,7 +300,7 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
             if (dt_reason[0].dt_reason !== null) {
               if(dt_reason[0].dt_reason.includes("Op")){
                 useRefColorData.current = [...useRefColorData.current, "#blue"];
-              }else if(dt_reason[0].dt_reason.includes("Mt")){
+              }else if(dt_reason[0].dt_reason.includes("Mt") || dt_reason[0].dt_reason.includes("Fac")){
                 useRefColorData.current = [...useRefColorData.current, "#blue"];
               }
               else{

@@ -26,7 +26,7 @@ const TimeFrame = ({ durationSecs, bgColor, timeFrameId, dtReason }) => {
   };
 
   const loadDowntTime = (e, bgColor) => {
-    if (bgColor === "red" || bgColor === "#A52A2A") {
+    if (bgColor === "red" || bgColor === "#A52A2A" || bgColor === "blue") {
       //console.log("Load Downt Time", timeFrameId);
       (async () => {
         let res = await fetch(
@@ -81,7 +81,7 @@ const TimeFrame = ({ durationSecs, bgColor, timeFrameId, dtReason }) => {
       cursor: "pointer",
     };
   } else {
-    style = { width: `${durationPercentage}%`, backgroundColor: bgColor };
+    style = { width: `${durationPercentage}%`, backgroundColor: bgColor};
   }
 
   return (
@@ -93,7 +93,7 @@ const TimeFrame = ({ durationSecs, bgColor, timeFrameId, dtReason }) => {
     >
       {dtReason}
       {(bgColor === "#A52A2A" || bgColor === 'blue')&&<span class="tooltiptext" style={hoverStyle}>
-        {dtReason}
+        {`${dtReason} - ${(durationSecs/60).toFixed(2)} minutes`}
       </span>}
       {/*<p className="down-time-reason">
         <span className="tooltiptext">

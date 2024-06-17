@@ -277,7 +277,7 @@ const DownTimePareto = () => {
       const seconds = hour.reduce((acc, item) => acc + item.seconds, 0);
       dt_hour.push({ hour: dt_reason[i], dt: (Number(seconds)/3600).toString()}); //push hour and seconds to the array, second converted to hours
     }
-    console.log('Dt hour', dt_hour);
+    console.log('Dt hoasdur', dt_hour);
     
     //create function that order from highest to lowest using hour as reference insise the array of objects
     const orderArray = (array) => {

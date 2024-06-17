@@ -108,7 +108,7 @@ const ScrapGraph = () => {
     const date2 = new Date(data.LEAD_created_at);
     const difference = date2.getTime() - date1.getTime();
     const seconds = difference / 1000;
-    console.log("secfsdfsdfdf", seconds);
+    console.log("secfsdfsdffdf", seconds);
     return seconds;
   };
 

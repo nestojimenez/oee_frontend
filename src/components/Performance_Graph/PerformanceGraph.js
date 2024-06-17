@@ -71,7 +71,7 @@ const months = [
 const PerformanceGraph = () => {
   //Load from redux product selected CT
   const cycleTime = useSelector((state) => state.product.cycle_time);
-  console.log("cyclsdfd Time", cycleTime);
+  console.log("cyclsdfddd Time", cycleTime);
   //Load from redux state dateSelected
   const dateSelected = useSelector((state) => state.date);
   const currentStation = useSelector((state) => state.station);

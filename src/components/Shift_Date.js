@@ -3,13 +3,14 @@ import DatePicker from "./DatePicker";
 //Set up the use of the Reducer
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import Shift_Shift from "./Shift_Shift";
+import ToCSV from "./ToCSV";
 
 const Shift_Date = () => {
   const [timestamp, setTimestamp] = useState(0);
   const [datePickerVisible, setDatePickerVisible] = useState(false);
 
-   //Load from redux state dateSelected
-   const dateSelected = useSelector((state) => state.date);
+  //Load from redux state dateSelected
+  const dateSelected = useSelector((state) => state.date);
 
   const weekDays = [
     "No Day",
@@ -24,7 +25,9 @@ const Shift_Date = () => {
 
   const getTime = () => {
     let date = new Date();
-    let localDate = (typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {timeZone: 'America/Tijuana'});
+    let localDate = (
+      typeof date === "string" ? new Date(date) : date
+    ).toLocaleString("en-US", { timeZone: "America/Tijuana" });
     const weekDay = weekDays[new Date().getDay()];
     //console.log(date);
     date = JSON.stringify(localDate);
@@ -36,14 +39,16 @@ const Shift_Date = () => {
     return date;
   };
 
-  const onClick = ()=>{
-    console.log('Date Clicked');
+  const onClick = () => {
+    console.log("Date Clicked");
     setDatePickerVisible(!datePickerVisible);
-  }
+  };
 
   useEffect(() => {
     setTimestamp(getTime);
-    setInterval(() => {setTimestamp(getTime)}, 1000);
+    setInterval(() => {
+      setTimestamp(getTime);
+    }, 1000);
   }, []);
 
   return (
@@ -55,11 +60,15 @@ const Shift_Date = () => {
         </span>
         {timestamp}
       </p>
-      {datePickerVisible && <DatePicker/>}
+      {datePickerVisible && <DatePicker />}
       <p className="station">Date Selected</p>
       <p className="station-name">{`${dateSelected.day}/${dateSelected.month}/${dateSelected.year}`}</p>
       <p className="station">Shift Selected</p>
-      <Shift_Shift />
+
+      <div className="shift-export-div">
+        <Shift_Shift />
+        <ToCSV />
+      </div>
     </div>
   );
 };

@@ -71,13 +71,14 @@ const months = [
 const PerformanceGraph = () => {
   //Load from redux product selected CT
   const cycleTime = useSelector((state) => state.product.cycle_time);
-  console.log("cyclsdfddd Time", cycleTime);
+  console.log("cyclsdfdddsdf Time", cycleTime);
   //Load from redux state dateSelected
   const dateSelected = useSelector((state) => state.date);
   const currentStation = useSelector((state) => state.station);
 
   const [useData, setUseData] = useState([]);
   const [performanceData, setPerformanceData] = useState([]);
+  const [update, setUpdate] = useState(false);
 
   //Take average of % Performance for the entire shift
   const averagePerformance = (dataArray) => {
@@ -372,6 +373,11 @@ const PerformanceGraph = () => {
     );
   };
 
+  const overChart = (e) => {
+    console.log(e);
+    setUpdate(!update);
+  }
+
   useEffect(() => {
     ////s//etData([]);
     const date = dateToString(
@@ -386,13 +392,13 @@ const PerformanceGraph = () => {
     //console.log(date);
 
     buildDataForPerformance(date, id);
-  }, [dateSelected, currentStation]);
+  }, [dateSelected, currentStation, update]);
 
   return (
     <div style={{width:'80vw', position:'relative', paddingRight:'10%', paddingLeft:'10%'}}>
       {useData.length === 0 ? <h1>Loading...</h1> : null}
       {/*<PerformanceData data={useData} style={{ background: "white" }} />*/}
-      {<Chart data={chartData} plugins={[ChartDataLabels]} options={options} />}
+      {<Chart data={chartData} plugins={[ChartDataLabels]} options={options} onMouseOver={overChart}/>}
     </div>
   );
 };

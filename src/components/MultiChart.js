@@ -131,7 +131,7 @@ const MultiChart = () => {
   };
 
   return (
-    <Chart data={chartData} options={options} style={{ width: "500px" }} />
+    <Chart data={chartData} options={options} style={{ width: "300px" }} />
   );
 };
 

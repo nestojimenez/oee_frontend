@@ -75,7 +75,7 @@ const Shift_Frame = () => {
 
     currentShift.map((hour, index) => {
       (async () => {
-        console.log(hour);
+        //console.log(hour);
         if (hour < 10) {
           startHour = `0${hour}`;
           endHour = `0${hour + 1}`.slice(-2, 3);
@@ -95,7 +95,7 @@ const Shift_Frame = () => {
         //console.log(hour);
         useRefFirstHourProduct.current.push([data[0], hour]);
 
-        console.log(useRefFirstHourProduct.current);
+        //console.log(useRefFirstHourProduct.current);
       })();
     });
   }, [update]);

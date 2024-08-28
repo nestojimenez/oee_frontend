@@ -3,7 +3,9 @@ import { useSelector } from "react-redux";
 import { Bar } from "react-chartjs-2";
 
 //const CT = 5;
-const SLOWPEED = 65;
+const SLOWPEED = 30;
+
+
 
 const startShiftObject = {
   id: 0,
@@ -87,6 +89,8 @@ const DownTimePareto = () => {
   const [data, setData] = useState([]);
   const [dtToGraph, setDtToGraph] = useState([]);
 
+  const [update, setUpdate] = useState(false);  
+
   //create a fetch function that use this api /machine_performance/date_range/:start_time/:end_time/:date/:id that use the start_time and end_time date and id and returns the data on an array
   const fetchDownTimeGraph = (start_time, end_time, date, id) => {
     fetch(
@@ -95,7 +99,7 @@ const DownTimePareto = () => {
       .then((res) => res.json())
       .then((data) => { 
         //set the data to the state
-        console.log("Data from sdffeh", data);
+        //console.log("Data from sdsdfffeh", data);
         if (data.length === 0) {
           //If shift is empty
 
@@ -243,13 +247,14 @@ const DownTimePareto = () => {
   const dtReasons = (data) => {
     const reasons = data.map((item) => item.dt_reason);
     const uniqueReasons = [...new Set(reasons)];
-    console.log(uniqueReasons);
+    //console.log(uniqueReasons);
     return uniqueReasons;
   };
 
   //create an array of objects that has the sum of the seconds of each hour of the shift
   const dtHourSeconds = (data) => {
     //create a function that take dt_hour array of objects and replace null value with 'No reason' string
+    //Look here for 12 hour no reason
     const replaceNull = (array) => {
       const newArray = array.map((item) => {
         if (item.dt_reason === null || item.dt_reason === undefined) {
@@ -260,24 +265,24 @@ const DownTimePareto = () => {
         }
       });
 
-      console.log(newArray);
+      //console.log(newArray);
       return newArray;
     };
     data = replaceNull(data);
 
-    console.log(dtReasons(data));
+    //console.log(dtReasons(data));
     const dt_reason = dtReasons(data);
     const dt_hour = [];
     for (let i = 0; i < dt_reason.length; i++) {
       const hour = data.filter(
         (item) =>
-          item.dt_reason === dt_reason[i] && item.seconds > cycleTime + (SLOWPEED - cycleTime)
-      ); //Filtes by hour and by second between CT and - CT-SLOWPEED
+          item.dt_reason === dt_reason[i] && item.seconds > cycleTime + (SLOWPEED - cycleTime) && item.dt_reason !== 'No reason'
+      ); //Filters by hour and by second between CT and - CT-SLOWPEED
 
       const seconds = hour.reduce((acc, item) => acc + item.seconds, 0);
       dt_hour.push({ hour: dt_reason[i], dt: (Number(seconds)/3600).toString()}); //push hour and seconds to the array, second converted to hours
     }
-    console.log('Dt hoasdur', dt_hour);
+    //console.log('Dt hoasdudfr', dt_hour);
     
     //create function that order from highest to lowest using hour as reference insise the array of objects
     const orderArray = (array) => {
@@ -302,7 +307,7 @@ const DownTimePareto = () => {
   //////////////////////////Chart Data configurarion///////////////////////////////
   const chartData = {
     labels: dtHourSeconds(data).map((dat) => {
-      console.log(dat.hour);
+      //console.log(dat.hour);
       return dat.hour;
     }),
     datasets: [
@@ -373,6 +378,11 @@ const DownTimePareto = () => {
     },
   };
 
+  const overGraph = (e) => {
+    //console.log(e);
+    setUpdate(!update);
+  }
+
   useEffect(() => {
     setData([]);
     const date = dateToString(
@@ -385,13 +395,13 @@ const DownTimePareto = () => {
       fetchDownTimeGraph(item, shift_build[index + 1], date, currentStation.id);
     });
     //fetchDownTimeGraph(start_time, end_time, date, id);
-  }, [dateSelected, currentStation]);
+  }, [dateSelected, currentStation, update]);
 
   return (
     <div style={{width:'80vw', position:'relative', paddingRight:'10%', paddingLeft:'10%'}}>
       {data.length === 0 ? <h1>Loading...</h1> : null}
       {/*<DownTimeGraphData data={data} style={{ background: "white" }} />*/}
-      <Bar data={chartData} options={options}/>
+      <Bar data={chartData} options={options} onMouseOver={overGraph}/>
     </div>
   );
 };

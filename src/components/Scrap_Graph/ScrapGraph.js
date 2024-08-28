@@ -79,6 +79,7 @@ const ScrapGraph = () => {
   const [yieldHour, setYieldHour] = useState([]);
   const [parts, setParts] = useState([]);
   const [scrap, setScrap] = useState([]);
+  const [update, setUpdate] = useState(false);
 
   //create a function that will convert day, month and year to a single string with the format YYYYMMDD
   const dateToString = (year, month, day) => {
@@ -108,7 +109,7 @@ const ScrapGraph = () => {
     const date2 = new Date(data.LEAD_created_at);
     const difference = date2.getTime() - date1.getTime();
     const seconds = difference / 1000;
-    console.log("secfsdfsdffdf", seconds);
+    console.log("secfsdsdffsdsdfffdf", seconds);
     return seconds;
   };
 
@@ -356,6 +357,11 @@ const ScrapGraph = () => {
     },
   };
 
+  const overGraph = (e) => { 
+    console.log(e);
+    setUpdate(!update)
+   }
+
   useEffect(() => {
     setUseData([]);
     const date = dateToString(
@@ -366,13 +372,13 @@ const ScrapGraph = () => {
     const id = currentStation.id;
     console.log("Date", date);
     calculateScrapDataForGraph(date, id);
-  }, [dateSelected, currentStation]);
+  }, [dateSelected, currentStation, update]);
 
   return (
     <div style={{width:'80vw', position:'relative', paddingRight:'10%', paddingLeft:'10%'}}>
       {useData.length === 0 ? <h1>Loading...</h1> : null}
       {/*<AllData data={useData} style={{ background: "white" }} />*/}
-      {<Chart data={chartData} plugins={[ChartDataLabels]} options={options} />}
+      {<Chart data={chartData} plugins={[ChartDataLabels]} options={options} onMouseOver={overGraph}/>}
     </div>
   );
 };

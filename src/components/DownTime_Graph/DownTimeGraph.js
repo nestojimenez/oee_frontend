@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Bar } from "react-chartjs-2";
+import userEvent from "@testing-library/user-event";
 
 //const CT = 5;
 const SLOWPEED = 30;
@@ -74,6 +75,10 @@ const shift_build = shift.map((item) => {
 //console.log(shift_build);
 
 const DownTimeGraph = () => {
+  //useState to update graph when needed
+  const [update, setUpdate] = useState(false);
+
+  const dataX = useRef([]);
 
   //Load from redux product selected CT
   const cycleTime = useSelector((state) => state.product.cycle_time);
@@ -87,6 +92,7 @@ const DownTimeGraph = () => {
   const [data, setData] = useState([]);
   const [dtToGraph, setDtToGraph] = useState([]);
 
+  //console.log("Data", data[0]);
   //create a fetch function that use this api /machine_performance/date_range/:start_time/:end_time/:date/:id that use the start_time and end_time date and id and returns the data on an array
   const fetchDownTimeGraph = (start_time, end_time, date, id) => {
     fetch(
@@ -123,9 +129,12 @@ const DownTimeGraph = () => {
             shift_hour: start_time,
           };
 
-          setData((prevData) => {
+          dataX.current = [...dataX.current, ...newData]; //set the data to the useRef
+
+          /*setData((prevData) => {
             return [...prevData, newData];
-          }); //set the data to the state to render
+          });*/ //set the data to the state to render
+
           return;
         } else {
           //Get created_at from first element of query to add an element at the beggining of the our to get time elapsed from the beginig of the shift to the firts element of the query
@@ -154,13 +163,19 @@ const DownTimeGraph = () => {
           );
           const newData = data.map((item) => {
             const seconds = timeDifferenceSeconds(item);
+            console.log("DATA Seconds", seconds);
             return { ...item, seconds: seconds, shift_hour: start_time }; //insert seconds and our shift to the object
           });
 
-          setData((prevData) => {
+          //Usar useRef para mantener los datos pero no actualizar el DOM////
+          //TODO
+
+          dataX.current = [...dataX.current, ...newData]; //set the data to the useRef
+
+          /*setData((prevData) => {
             return [...prevData, ...newData];
-          }); //set the data to the state to render
-          console.log("Datsdfa ben query", data);
+          }); */ //set the data to the state to render
+          //console.log("Datsdfa ben query", data);
         }
       })
       .catch((err) => console.log(err));
@@ -171,6 +186,7 @@ const DownTimeGraph = () => {
     const date1 = new Date(data.created_at);
     const date2 = new Date(data.LEAD_created_at);
     const difference = date2.getTime() - date1.getTime();
+    console.log("Difference", difference);
     const seconds = difference / 1000;
     //console.log(seconds);
     return seconds;
@@ -227,7 +243,7 @@ const DownTimeGraph = () => {
       day = day;
     }
 
-    if (Number(month) <10) {
+    if (Number(month) < 10) {
       month = "0" + month;
     } else {
       month = month;
@@ -239,6 +255,7 @@ const DownTimeGraph = () => {
 
   //create an array of objects that has the sum of the seconds of each hour of the shift
   const dtHourSeconds = (data) => {
+    console.log("DATA input", data);
     const dt_hour = [];
     for (let i = 0; i < 12; i++) {
       const hour = data.filter(
@@ -249,7 +266,11 @@ const DownTimeGraph = () => {
 
       const seconds = hour.reduce((acc, item) => acc + item.seconds, 0);
       dt_hour.push({ hour: shift_build[i], dt: seconds });
+      console.log("DT_HOUR_hour", hour);
+      console.log("DT_HOUR_seconds", seconds);
+      console.log("DT_HOUR_dthour", dt_hour[0], i);
     }
+
     return dt_hour;
   };
 
@@ -261,7 +282,7 @@ const DownTimeGraph = () => {
       {
         label: `Downtime per shift ${dateSelected.month} - ${dateSelected.day} - ${dateSelected.year}`,
         data: dtHourSeconds(data).map((data) => {
-          return data.dt//(Number(data.dt)/3600).toFixed(2)*100;
+          return data.dt; //(Number(data.dt)/3600).toFixed(2)*100;
         }),
         borderColor: "red",
         backgroundColor: "red",
@@ -269,25 +290,49 @@ const DownTimeGraph = () => {
     ],
   };
 
-  useEffect(() => {
-    setData([]);
+  const overChart = (e) => {
+    console.log(e);
+    setUpdate(!update);
+  };
+
+  const buildDowntimeGraph = (shift_build) => {
+    dataX.current = [];
+
     const date = dateToString(
       dateSelected.year,
       dateSelected.month,
       dateSelected.day
     );
-    //console.log(date);
+
     shift_build.forEach((item, index) => {
       fetchDownTimeGraph(item, shift_build[index + 1], date, currentStation.id);
     });
+
+    setData(dataX.current);
+  };
+
+  useEffect(() => {
+    setData([]);
+
+    //console.log(date);
+
+    buildDowntimeGraph(shift_build);
+
     //fetchDownTimeGraph(start_time, end_time, date, id);
-  }, [dateSelected, currentStation]);
+  }, [dateSelected, currentStation, update]);
 
   return (
-    <div style={{width:'80vw', position:'relative', paddingRight:'10%', paddingLeft:'10%'}}>
+    <div
+      style={{
+        width: "80vw",
+        position: "relative",
+        paddingRight: "10%",
+        paddingLeft: "10%",
+      }}
+    >
       {data.length === 0 ? <h1>Loading...</h1> : null}
       {/*<DownTimeGraphData data={data} style={{ background: "white" }} />*/}
-      <Bar data={chartData}/>
+      <Bar data={chartData} onMouseOver={overChart} />
     </div>
   );
 };

@@ -53,7 +53,7 @@ const TimeFrame = ({ durationSecs, bgColor, timeFrameId, dtReason }) => {
 
   let hoverStyle = {};
   const mouseHover = (e) => {
-    console.log(e.pageX, e.pageY);
+    //console.log(e.pageX, e.pageY);
     
       hoverStyle = {
         visibility: "hidden",

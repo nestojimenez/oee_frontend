@@ -145,7 +145,7 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
       }
 
      
-        console.log("StartHour", startHour, "EndHour", endHour )
+        //console.log("StartHour", startHour, "EndHour", endHour )
       
 
       let res = await fetch(
@@ -169,14 +169,14 @@ const Hour_Frame = ({ hour, update, firstProductByHour }) => {
         //Update qty per hour (output_hour)////////////////////////////////////////
         //console.log(output_hour);
         if(shiftSelector === "Second Shift" || shiftSelector === "Fourth Shift"){
-          console.log("Second Shift", shiftSelector);
+         // console.log("Second Shift", shiftSelector);
         }
 
         console.log(output_hour);
         let newOutputHour = output_hour;
         newOutputHour[hour] = parseInt(data.length);
-        console.log(data.length);
-        console.log(newOutputHour);
+        //console.log(data.length);
+        //console.log(newOutputHour);
         dispatch(outputHour(newOutputHour));
         //console.log(output_hour);
 

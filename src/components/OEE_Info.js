@@ -22,7 +22,7 @@ const OEE_Info = () => {
 
   return (
     <div className="station-info">
-      <MultiChart />
+      <MultiChart/>
     </div>
   );
 };

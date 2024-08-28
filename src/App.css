@@ -133,7 +133,7 @@
   grid-template-columns: auto;
   height: 60hw;
   width: auto;
-  margin: 0 auto;
+  margin: 0px auto;
   background-color: transparent;
   border: #121212 5px solid;
 }
@@ -176,6 +176,7 @@
   border: 2px #282c34 solid;
   background-color: #121212;
   margin-left: 5px;
+  
 }
 
 .quarter-hour-line {
@@ -190,6 +191,7 @@
 }
 
 .station-frame {
+  margin-top: -30px;
   display: grid;
   grid-template-columns: 25% 40% 35%;
   top: 3vw;
@@ -199,6 +201,7 @@
   border: 2px #282c34 solid;
   background-color: #121212;
   margin-left: 0px;
+  
 }
 
 .testing-frame {
@@ -295,4 +298,11 @@
 
 .button-24:active {
   opacity: .5;
+}
+
+.shift-export-div{
+  display: flex;
+  justify-content: space-around;
+  flex-direction: row;
+  
 }
